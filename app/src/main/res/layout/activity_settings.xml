@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SettingsActivity">
+
+    <TextView
+        android:id="@+id/textView_label_inspector"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="80dp"
+        android:gravity="center_vertical"
+        android:text="@string/inspector"
+        app:layout_constraintStart_toEndOf="@+id/button_download"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView_label_infoFileName"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:gravity="center_vertical"
+        android:text="@string/infoFileName"
+        app:layout_constraintStart_toStartOf="@+id/textView_label_TFTPAddress"
+        app:layout_constraintTop_toBottomOf="@+id/textView_label_TFTPAddress" />
+
+    <TextView
+        android:id="@+id/textView_label_uploadDateTime"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:gravity="center_vertical"
+        android:text="@string/uploadDateTime"
+        app:layout_constraintStart_toStartOf="@+id/textView_label_downloadDateTime"
+        app:layout_constraintTop_toBottomOf="@+id/textView_label_downloadDateTime" />
+
+    <EditText
+        android:id="@+id/editText_TFTPaddress"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:ems="10"
+        android:hint="192.168.1.1"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="@+id/editText_inspector"
+        app:layout_constraintStart_toStartOf="@+id/editText_inspector"
+        app:layout_constraintTop_toBottomOf="@+id/editText_inspector" />
+
+    <EditText
+        android:id="@+id/editText_infoFileName"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:ems="10"
+        android:hint="input.txt"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="@+id/editText_TFTPaddress"
+        app:layout_constraintStart_toStartOf="@+id/editText_TFTPaddress"
+        app:layout_constraintTop_toBottomOf="@+id/editText_TFTPaddress" />
+
+    <TextView
+        android:id="@+id/textView_label_downloadDateTime"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:gravity="center_vertical"
+        android:text="@string/downloadDateTime"
+        app:layout_constraintStart_toStartOf="@+id/textView_label_infoFileName"
+        app:layout_constraintTop_toBottomOf="@+id/textView_label_infoFileName" />
+
+    <EditText
+        android:id="@+id/editText_inspector"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="80dp"
+        android:ems="10"
+        android:hint="K№"
+        android:inputType="textPersonName"
+        app:layout_constraintStart_toEndOf="@+id/textView_label_infoFileName"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView_label_TFTPAddress"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:gravity="center_vertical"
+        android:text="@string/TFTPAddress"
+        app:layout_constraintStart_toStartOf="@+id/textView_label_inspector"
+        app:layout_constraintTop_toBottomOf="@+id/textView_label_inspector" />
+
+    <Button
+        android:id="@+id/button_download"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/download"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/button_upload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/upload"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/button_apply"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/apply"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/button_cancel" />
+
+    <Button
+        android:id="@+id/button_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/cancel"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/textView_downloadDateTime"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:gravity="center_vertical"
+        android:text="01.01.2022 08:30"
+        app:layout_constraintEnd_toEndOf="@+id/editText_infoFileName"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/editText_infoFileName"
+        app:layout_constraintTop_toBottomOf="@+id/editText_infoFileName" />
+
+    <TextView
+        android:id="@+id/textView_uploadDateTime"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:gravity="center_vertical"
+        android:text="01.01.2022 15:00"
+        app:layout_constraintEnd_toEndOf="@+id/editText_infoFileName"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/textView_downloadDateTime"
+        app:layout_constraintTop_toBottomOf="@+id/textView_downloadDateTime" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

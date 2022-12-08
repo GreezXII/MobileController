@@ -20,4 +20,13 @@
     <string name="inspectionsCount">Обходов:</string>
     <string name="completedCount">Выполнено:</string>
     <string name="note">Примечание</string>
+    <string name="inspector">Контролёр:</string>
+    <string name="infoFileName">Имя файла с выписками:</string>
+    <string name="uploadDateTime">Дата выгрузки:</string>
+    <string name="downloadDateTime">Дата загрузки:</string>
+    <string name="TFTPAddress">Адрес TFTP сервера:</string>
+    <string name="download">Загрузить</string>
+    <string name="upload">Выгрузить</string>
+    <string name="apply">Применить</string>
+    <string name="cancel">Отменить</string>
 </resources>
