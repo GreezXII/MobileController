@@ -1,3 +1,23 @@
 <resources>
     <string name="app_name">MobileController</string>
+    <string name="spinner_addresses">spinner_addresses</string>
+    <string name="Settings">Настройки</string>
+    <string name="Value">Показания</string>
+    <string name="isZeroValue">Нулевые показания</string>
+    <string name="Contract">Договор:</string>
+    <string name="fullName">ФИО:</string>
+    <string name="phoneNumber">Телефон:</string>
+    <string name="meter">Счетчик:</string>
+    <string name="installationDate">Дата установки:</string>
+    <string name="isDisabled">Отключен:</string>
+    <string name="debt">Задолженность:</string>
+    <string name="inspectionDate">Дата обхода:</string>
+    <string name="isByActs">По актам:</string>
+    <string name="verification">Г/П:</string>
+    <string name="isAntimagnet">Антимагнит:</string>
+    <string name="paymentDate">Дата оплаты:</string>
+    <string name="openInfo">Открыть выписку</string>
+    <string name="inspectionsCount">Обходов:</string>
+    <string name="completedCount">Выполнено:</string>
+    <string name="note">Примечание</string>
 </resources>
