@@ -29,4 +29,6 @@
     <string name="upload">Выгрузить</string>
     <string name="apply">Применить</string>
     <string name="cancel">Отменить</string>
+    <string name="close">Закрыть</string>
+    <string name="info">Выписка</string>
 </resources>
