@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import java.io.IOException;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -14,6 +16,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initButtons();
+
+        DataManager dm = new DataManager();
+        dm.TestTFTP(this);
     }
 
     private void initButtons()
@@ -21,21 +26,15 @@ public class MainActivity extends AppCompatActivity {
         Button button;
         // Settings button
         button = findViewById(R.id.button_settings);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
-                startActivity(intent);
-            }
+        button.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+            startActivity(intent);
         });
         // Open info button
         button = findViewById(R.id.button_openInfo);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, InfoActivity.class);
-                startActivity(intent);
-            }
+        button.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this, InfoActivity.class);
+            startActivity(intent);
         });
     }
 }
