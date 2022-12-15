@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
     tools:context=".MainActivity">
 
     <Spinner
@@ -40,6 +41,7 @@
         android:layout_height="48dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:autofillHints=""
         android:ems="10"
         android:hint="@string/Value"
         android:inputType="number"
@@ -48,8 +50,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/recycler_addresses"
-        app:layout_constraintTop_toBottomOf="@+id/button_settings"
-        android:autofillHints="" />
+        app:layout_constraintTop_toBottomOf="@+id/button_settings" />
 
     <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/switch_isZeroValue"
@@ -403,12 +404,12 @@
         android:layout_width="0dp"
         android:layout_height="48dp"
         android:layout_marginEnd="8dp"
+        android:autofillHints=""
         android:ems="10"
         android:hint="@string/note"
         android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/editText_value"
-        app:layout_constraintTop_toBottomOf="@+id/editText_value"
-        android:autofillHints="" />
+        app:layout_constraintTop_toBottomOf="@+id/editText_value" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
