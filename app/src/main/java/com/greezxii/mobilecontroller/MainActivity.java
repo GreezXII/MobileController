@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
         initButtons();
 
         DataManager dm = new DataManager();
-        dm.TestTFTP(this);
+        String result = dm.getFileContentFromTFTP(this, dm.INPUT_FILE_NAME);
     }
 
     private void initButtons()
