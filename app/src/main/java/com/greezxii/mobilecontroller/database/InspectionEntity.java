@@ -1,9 +1,7 @@
 package com.greezxii.mobilecontroller.database;
 
-import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
-
 import java.math.BigDecimal;
 import java.util.Date;
 
