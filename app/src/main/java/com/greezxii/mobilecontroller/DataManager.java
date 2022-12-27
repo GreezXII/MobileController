@@ -4,6 +4,8 @@ import android.app.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.greezxii.mobilecontroller.database.InspectionEntity;
+
 import org.apache.commons.net.tftp.TFTP;
 import org.apache.commons.net.tftp.TFTPClient;
 
@@ -20,6 +22,7 @@ import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.List;
 
 public class DataManager {
     public String TFTP_SERVER_IP = "192.168.43.93";  // 127.0.0.1
@@ -54,4 +57,6 @@ public class DataManager {
         }
         return worker.result;
     }
+
+    public InspectionEntity
 }
