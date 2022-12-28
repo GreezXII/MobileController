@@ -7,7 +7,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.greezxii.mobilecontroller.database.InspectionEntity;
+
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -18,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
         initButtons();
 
         DataManager dm = new DataManager();
-        String result = dm.getFileContentFromTFTP(this, dm.INPUT_FILE_NAME);
+        ArrayList<InspectionEntity> inspections = dm.loadEntities();
     }
 
     private void initButtons()

@@ -2,6 +2,11 @@ package com.greezxii.mobilecontroller.database;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
+
+import com.greezxii.mobilecontroller.database.converters.BigDecimalConverter;
+import com.greezxii.mobilecontroller.database.converters.LocalDateConverter;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -9,15 +14,18 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Entity
+@TypeConverters({LocalDateConverter.class, BigDecimalConverter.class})
 public class InspectionEntity {
+    // Ссылочный тип Integer используется для полей, которые
+    // могут принимать целочисленные значения и null
     @PrimaryKey
     public int id;
     public String street;
     public int buildingNumber;
     public String buildingLetter;
-    public Integer blockNumber; // Номер корпуса может отсутствовать, поэтому используется ссылочный тип Integer
+    public Integer blockNumber;
     public String blockLetter;
-    public int apartmentNumber;
+    public Integer apartmentNumber;
     public String apartmentLetter;
     public String fullName;
     public String meterSerialId;
@@ -36,7 +44,7 @@ public class InspectionEntity {
     public String info;
 
     public void fromString(String s) {
-        String[] row = s.split("|");
+        String[] row = s.split("[|]");
 
         id = Integer.parseInt(row[0]);
         street = row[1].split(",")[0];
@@ -56,14 +64,14 @@ public class InspectionEntity {
         isAntimagnet = Boolean.parseBoolean(row[12]);
         isDisabled = Boolean.parseBoolean(row[13]);
         debtByActs = new BigDecimal(row[14]);
-        contacts = row[15];
+        contacts = row[15].trim();
         installationDate = stringToLocalDate(row[16]);
         verificationDate = stringToLocalDate(row[17]);
-        numberOfDigits = Integer.parseInt(row[18]);
+        numberOfDigits = Integer.parseInt(row[18].trim());
     }
 
     private LocalDate stringToLocalDate(String s) {
-        return LocalDate.parse(s, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        return LocalDate.parse(s, DateTimeFormatter.ofPattern("dd.MM.yy"));
     }
     private String findBuildingLetter(String s) {
         // Соответствует букве дома. Поиск по префиксу "дом.N-" где N - это номер дома из 1-3 цифр
