@@ -5,7 +5,6 @@ import androidx.room.PrimaryKey;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,11 +14,11 @@ public class InspectionEntity {
     public int id;
     public String street;
     public int buildingNumber;
-    public char buildingLetter;
-    public int blockNumber;
-    public char blockLetter;
+    public String buildingLetter;
+    public Integer blockNumber; // Номер корпуса может отсутствовать, поэтому используется ссылочный тип Integer
+    public String blockLetter;
     public int apartmentNumber;
-    public char apartmentLetter;
+    public String apartmentLetter;
     public String fullName;
     public String meterSerialId;
     public String meterModel;
@@ -36,27 +35,17 @@ public class InspectionEntity {
     public int numberOfDigits;
     public String info;
 
-    public void fromString(String str) {
-        String[] row = str.split("|");
-        id = Integer.parseInt(row[0]);
-        // Parse
-        street = row[1].split(",")[0];
-        // Building
-        String buildingRegex = "(?<=дом\\.).*(?= )";
-        Pattern pattern = Pattern.compile(buildingRegex);
-        String[] buildingNumberLetter = pattern.matcher(row[1]).toString().split("-");
-        buildingNumber = Integer.parseInt(buildingNumberLetter[0]);
-        buildingLetter = buildingNumberLetter[1].charAt(0);
-        // Block
-        String blockRegex = "(?<=кор\\.).*";
-        pattern = Pattern.compile(buildingRegex);
-        String[] blockNumberLetter = pattern.matcher(row[1]).toString().split("-");
-        blockNumber = Integer.parseInt(blockNumberLetter[0]);
-        blockLetter = blockNumberLetter[1].charAt(0);
-        // Appartment
-        apartmentNumber = Integer.parseInt(row[3]);
-        apartmentLetter = row[4].charAt(0);
+    public void fromString(String s) {
+        String[] row = s.split("|");
 
+        id = Integer.parseInt(row[0]);
+        street = row[1].split(",")[0];
+        buildingNumber = Integer.parseInt(row[2]);
+        buildingLetter = findBuildingLetter(row[1]);
+        blockNumber = findBlockNumber(row[1]);
+        blockLetter = findBlockLetter(row[1]);
+        apartmentNumber = Integer.parseInt(row[3]);
+        apartmentLetter = row[4];
         fullName = row[5];
         meterSerialId = row[6];
         meterModel = row[7];
@@ -75,5 +64,29 @@ public class InspectionEntity {
 
     private LocalDate stringToLocalDate(String s) {
         return LocalDate.parse(s, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+    }
+    private String findBuildingLetter(String s) {
+        // Соответствует букве дома. Поиск по префиксу "дом.N-" где N - это номер дома из 1-3 цифр
+        String regex = "((?<=дом\\.[0-9][0-9][0-9]-)|(?<=дом\\.[0-9][0-9]-)|(?<=дом\\.[0-9]-))[а-яА-Я]";
+        return findMatch(s, regex);
+    }
+    private String findBlockLetter(String s) {
+        // Соответствует букве корпуса. Поиск по префиксу "кор.N-" где N - это номер корпуса из 1-2 цифр
+        String regex = "((?<=кор\\.[0-9][0-9]-)|(?<=кор\\.[0-9]-))[а-яА-Я]";
+        return findMatch(s, regex);
+    }
+    private Integer findBlockNumber(String s) {
+        String regex = "(?<=кор\\.)\\d*";
+        return Integer.parseInt(findMatch(s, regex));
+    }
+    private String findMatch(String s, String regex) {
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(s);
+        if(matcher.find()) {
+            return matcher.group();
+        }
+        else {
+            return null;
+        }
     }
 }
