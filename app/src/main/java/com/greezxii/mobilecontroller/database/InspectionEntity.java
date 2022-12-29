@@ -1,5 +1,6 @@
 package com.greezxii.mobilecontroller.database;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
@@ -10,6 +11,7 @@ import com.greezxii.mobilecontroller.database.converters.LocalDateConverter;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -96,5 +98,22 @@ public class InspectionEntity {
         else {
             return null;
         }
+    }
+    @NonNull
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        Locale locale = new Locale("ru", "RU");
+        result.append(String.format(locale, "%s, дом.%d", street, buildingNumber));
+        if(buildingLetter != null)
+            result.append(String.format(locale, "-%s", buildingLetter));
+        if(blockNumber != null)
+            result.append(String.format(locale, " кор.%d", blockNumber));
+        if(blockLetter != null)
+            result.append(String.format(locale, "-%s", blockLetter));
+        result.append(String.format(locale, ", %d", apartmentNumber));
+        if(apartmentLetter != null)
+            result.append(apartmentLetter);
+        return result.toString();
     }
 }
