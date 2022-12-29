@@ -1,0 +1,166 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "b124b07e29079aed506e07027d12f957",
+    "entities": [
+      {
+        "tableName": "InspectionEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `street` TEXT, `buildingNumber` INTEGER NOT NULL, `buildingLetter` TEXT, `blockNumber` INTEGER, `blockLetter` TEXT, `apartmentNumber` INTEGER, `apartmentLetter` TEXT, `fullName` TEXT, `meterSerialId` TEXT, `meterModel` TEXT, `paymentDate` INTEGER, `debt` TEXT, `lastInspectionDate` INTEGER, `value` INTEGER NOT NULL, `isAntimagnet` INTEGER NOT NULL, `isDisabled` INTEGER NOT NULL, `debtByActs` TEXT, `contacts` TEXT, `installationDate` INTEGER, `verificationDate` INTEGER, `numberOfDigits` INTEGER NOT NULL, `info` TEXT, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "street",
+            "columnName": "street",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "buildingNumber",
+            "columnName": "buildingNumber",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "buildingLetter",
+            "columnName": "buildingLetter",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "blockNumber",
+            "columnName": "blockNumber",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "blockLetter",
+            "columnName": "blockLetter",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "apartmentNumber",
+            "columnName": "apartmentNumber",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "apartmentLetter",
+            "columnName": "apartmentLetter",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fullName",
+            "columnName": "fullName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "meterSerialId",
+            "columnName": "meterSerialId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "meterModel",
+            "columnName": "meterModel",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "paymentDate",
+            "columnName": "paymentDate",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "debt",
+            "columnName": "debt",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "lastInspectionDate",
+            "columnName": "lastInspectionDate",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "value",
+            "columnName": "value",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isAntimagnet",
+            "columnName": "isAntimagnet",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isDisabled",
+            "columnName": "isDisabled",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "debtByActs",
+            "columnName": "debtByActs",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "contacts",
+            "columnName": "contacts",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "installationDate",
+            "columnName": "installationDate",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "verificationDate",
+            "columnName": "verificationDate",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "numberOfDigits",
+            "columnName": "numberOfDigits",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "info",
+            "columnName": "info",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b124b07e29079aed506e07027d12f957')"
+    ]
+  }
+}
