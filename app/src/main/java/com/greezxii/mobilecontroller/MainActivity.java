@@ -16,14 +16,17 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    private DataManager dm;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initButtons();
 
-        DataManager dm = new DataManager();
-        ArrayList<InspectionEntity> inspections = dm.loadEntities();
+        dm = new DataManager(this);
+        //dm.saveEntitiesFromTFTP();
+        List<InspectionEntity> inspections = dm.loadEntities();
         initRecycler(inspections);
     }
 

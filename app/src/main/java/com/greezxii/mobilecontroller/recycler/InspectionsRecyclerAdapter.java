@@ -27,7 +27,8 @@ public class InspectionsRecyclerAdapter extends RecyclerView.Adapter<ItemViewHol
 
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
-        holder.item_address.setText(items.get(position).toString());
+        InspectionEntity entity = items.get(position);
+        holder.item_address.setText(entity.toString());
     }
 
     @Override
