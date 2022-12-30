@@ -1,18 +1,18 @@
 package com.greezxii.mobilecontroller;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.widget.Button;
-
 import com.greezxii.mobilecontroller.database.InspectionEntity;
 import com.greezxii.mobilecontroller.recycler.InspectionsRecyclerAdapter;
-
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,12 +24,17 @@ public class MainActivity extends AppCompatActivity {
 
         DataManager dm = new DataManager();
         ArrayList<InspectionEntity> inspections = dm.loadEntities();
+        initRecycler(inspections);
+    }
 
+    private void initRecycler(List<InspectionEntity> data) {
         RecyclerView recyclerView = findViewById(R.id.recycler_addresses);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new InspectionsRecyclerAdapter(getApplicationContext(), inspections));
+        recyclerView.setAdapter(new InspectionsRecyclerAdapter(getApplicationContext(), data));
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, RecyclerView.VERTICAL);
-        dividerItemDecoration.setDrawable(getResources().getDrawable(R.drawable.divider_drawable));
+        Drawable divider = ResourcesCompat.getDrawable(getResources(), R.drawable.divider_drawable, null);
+        if(divider != null)
+            dividerItemDecoration.setDrawable(divider);
         recyclerView.addItemDecoration(dividerItemDecoration);
     }
 

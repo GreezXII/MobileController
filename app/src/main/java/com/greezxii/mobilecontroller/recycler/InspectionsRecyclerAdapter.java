@@ -5,10 +5,8 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.greezxii.mobilecontroller.R;
 import com.greezxii.mobilecontroller.database.InspectionEntity;
-
 import java.util.List;
 
 public class InspectionsRecyclerAdapter extends RecyclerView.Adapter<ItemViewHolder> {
