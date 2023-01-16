@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         initButtons();
 
         dm = new DataManager(this);
-        //dm.saveEntitiesFromTFTP();
+        dm.makeInspectionsCacheFromMock(this.getAssets());
         List<Inspection> inspections = dm.getAllInspections();
         initRecycler(inspections);
     }
