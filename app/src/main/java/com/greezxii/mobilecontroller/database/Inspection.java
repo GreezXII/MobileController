@@ -45,16 +45,16 @@ public class Inspection {
     public int numberOfDigits;
     public String info;
 
-    public void fromString(String s) {
+    public void fromString(@NonNull String s) {
         String[] row = s.split("[|]");
 
-        id = Integer.parseInt(row[0]);
+        id = Integer.parseInt(row[0].trim());
         street = row[1].split(",")[0];
-        buildingNumber = Integer.parseInt(row[2]);
+        buildingNumber = Integer.parseInt(row[2].trim());
         buildingLetter = findBuildingLetter(row[1]);
         blockNumber = findBlockNumber(row[1]);
         blockLetter = findBlockLetter(row[1]);
-        apartmentNumber = Integer.parseInt(row[3]);
+        apartmentNumber = Integer.parseInt(row[3].trim());
         apartmentLetter = row[4];
         fullName = row[5];
         meterSerialId = row[6];
@@ -62,7 +62,7 @@ public class Inspection {
         paymentDate = stringToLocalDate(row[8]);
         debt = new BigDecimal(row[9]);
         lastInspectionDate = stringToLocalDate(row[10]);
-        value = Integer.parseInt(row[11]);
+        value = Integer.parseInt(row[11].trim());
         isAntimagnet = Boolean.parseBoolean(row[12]);
         isDisabled = Boolean.parseBoolean(row[13]);
         debtByActs = new BigDecimal(row[14]);
@@ -86,6 +86,7 @@ public class Inspection {
         return findMatch(s, regex);
     }
     private Integer findBlockNumber(String s) {
+        // Соответствует номеру корпуса. "кор."
         String regex = "(?<=кор\\.)\\d*";
         return Integer.parseInt(findMatch(s, regex));
     }
