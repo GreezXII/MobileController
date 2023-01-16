@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 
 @Entity
 @TypeConverters({LocalDateConverter.class, BigDecimalConverter.class})
-public class InspectionEntity {
+public class Inspection {
     // Ссылочный тип Integer используется для полей, которые
     // могут принимать целочисленные значения и null
     @PrimaryKey
