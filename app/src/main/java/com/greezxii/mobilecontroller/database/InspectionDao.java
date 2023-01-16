@@ -10,14 +10,14 @@ import java.util.List;
 @Dao
 public interface InspectionDao {
     @Insert
-    void insertAll(InspectionEntity... users);
+    void insertAll(Inspection... users);
 
     @Delete
-    void deleteAll(InspectionEntity... users);
+    void deleteAll(Inspection... users);
 
-    @Query("SELECT * FROM InspectionEntity")
-    List<InspectionEntity> getAllInspections();
+    @Query("SELECT * FROM Inspection")
+    List<Inspection> getAllInspections();
 
-    @Query("SELECT * FROM InspectionEntity WHERE id = :id")
-    InspectionEntity getInspectionById(int id);
+    @Query("SELECT * FROM Inspection WHERE id = :id")
+    Inspection getInspectionById(int id);
 }

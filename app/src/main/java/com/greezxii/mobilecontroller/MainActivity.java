@@ -9,9 +9,9 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.widget.Button;
-import com.greezxii.mobilecontroller.database.InspectionEntity;
+import com.greezxii.mobilecontroller.database.Inspection;
 import com.greezxii.mobilecontroller.recycler.InspectionsRecyclerAdapter;
-import java.util.ArrayList;
+
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -26,11 +26,11 @@ public class MainActivity extends AppCompatActivity {
 
         dm = new DataManager(this);
         //dm.saveEntitiesFromTFTP();
-        List<InspectionEntity> inspections = dm.loadEntities();
+        List<Inspection> inspections = dm.getAllInspections();
         initRecycler(inspections);
     }
 
-    private void initRecycler(List<InspectionEntity> data) {
+    private void initRecycler(List<Inspection> data) {
         RecyclerView recyclerView = findViewById(R.id.recycler_addresses);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(new InspectionsRecyclerAdapter(getApplicationContext(), data));

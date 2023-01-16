@@ -1,8 +1,9 @@
 package com.greezxii.mobilecontroller;
 
 import android.content.Context;
+
+import com.greezxii.mobilecontroller.database.Inspection;
 import com.greezxii.mobilecontroller.database.InspectionDao;
-import com.greezxii.mobilecontroller.database.InspectionEntity;
 import com.greezxii.mobilecontroller.database.MobileControllerDatabase;
 import org.apache.commons.net.tftp.TFTP;
 import org.apache.commons.net.tftp.TFTPClient;
@@ -17,6 +18,7 @@ public class DataManager {
     public DataManager(Context context) {
         db = MobileControllerDatabase.getDatabase(context);
     }
+
     private String getFileContentFromTFTP() {
         class Worker extends Thread {
             String result = null;
@@ -46,28 +48,28 @@ public class DataManager {
         }
         return worker.result;
     }
-    private ArrayList<InspectionEntity> parseEntities(String fileContent) {
+    private ArrayList<Inspection> parseEntities(String fileContent) {
         String[] lines = fileContent.split("\r\n");
 
-        ArrayList<InspectionEntity> entities = new ArrayList<InspectionEntity>();
+        ArrayList<Inspection> entities = new ArrayList<Inspection>();
         for (String l : lines) {
             if (l.length() < 1)
                 continue;
-            InspectionEntity inspection = new InspectionEntity();
+            Inspection inspection = new Inspection();
             inspection.fromString(l);
             entities.add(inspection);
         }
         return entities;
     }
-    public void saveEntitiesFromTFTP() {
+    public void makeInspectionsCacheFromTFTP() {
         class Worker extends Thread {
             @Override
             public void run() {
                 super.run();
                 String tftpFileContent = getFileContentFromTFTP();
-                ArrayList<InspectionEntity> entities = parseEntities(tftpFileContent);
+                ArrayList<Inspection> entities = parseEntities(tftpFileContent);
                 InspectionDao inspectionDao = db.inspectionDao();
-                inspectionDao.insertAll(entities.toArray(new InspectionEntity[0]));
+                inspectionDao.insertAll(entities.toArray(new Inspection[0]));
             }
         }
         Worker worker = new Worker();
@@ -78,9 +80,9 @@ public class DataManager {
             e.printStackTrace();
         }
     }
-    public List<InspectionEntity> loadEntities() {
+    public List<Inspection> getAllInspections() {
         class Worker extends Thread {
-            List<InspectionEntity> result;
+            List<Inspection> result;
             @Override
             public void run() {
                 super.run();

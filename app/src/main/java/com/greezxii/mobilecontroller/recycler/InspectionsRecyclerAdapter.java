@@ -6,15 +6,16 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.greezxii.mobilecontroller.R;
-import com.greezxii.mobilecontroller.database.InspectionEntity;
+import com.greezxii.mobilecontroller.database.Inspection;
+
 import java.util.List;
 
 public class InspectionsRecyclerAdapter extends RecyclerView.Adapter<ItemViewHolder> {
 
     Context context;
-    List<InspectionEntity> items;
+    List<Inspection> items;
 
-    public InspectionsRecyclerAdapter(Context context, List<InspectionEntity> items) {
+    public InspectionsRecyclerAdapter(Context context, List<Inspection> items) {
         this.context = context;
         this.items = items;
     }
@@ -27,7 +28,7 @@ public class InspectionsRecyclerAdapter extends RecyclerView.Adapter<ItemViewHol
 
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
-        InspectionEntity entity = items.get(position);
+        Inspection entity = items.get(position);
         holder.item_address.setText(entity.toString());
     }
 
