@@ -2,7 +2,7 @@ package com.greezxii.mobilecontroller;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
-import androidx.lifecycle.ViewModel;
+import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -11,26 +11,30 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.widget.Button;
 
-import com.greezxii.mobilecontroller.Repository.DataRepository;
-import com.greezxii.mobilecontroller.ViewModel.MainViewModel;
+import com.greezxii.mobilecontroller.databinding.ActivityMainBinding;
+import com.greezxii.mobilecontroller.repository.DataRepository;
+import com.greezxii.mobilecontroller.viewmodel.MainViewModel;
 import com.greezxii.mobilecontroller.database.Inspection;
 import com.greezxii.mobilecontroller.recycler.InspectionsRecyclerAdapter;
 
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-
-    private DataRepository dm;
-
+    MainViewModel vm;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initButtons();
-
-        DataRepository repository = new DataRepository(this);
-        MainViewModel vm = new MainViewModel(repository);
+        initViewModel();
         initRecycler(vm.getInspections());
+    }
+
+    private void initViewModel() {
+        DataRepository repository = new DataRepository(this);
+        vm = new MainViewModel(repository);
+        ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        binding.setVm(vm);
     }
 
     private void initRecycler(List<Inspection> data) {

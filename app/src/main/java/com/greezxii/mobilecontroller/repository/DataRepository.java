@@ -1,7 +1,6 @@
-package com.greezxii.mobilecontroller.Repository;
+package com.greezxii.mobilecontroller.repository;
 
 import android.content.Context;
-import android.content.res.AssetManager;
 
 import com.greezxii.mobilecontroller.database.Inspection;
 import com.greezxii.mobilecontroller.database.InspectionDao;

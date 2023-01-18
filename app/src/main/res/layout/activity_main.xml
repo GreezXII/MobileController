@@ -1,405 +1,425 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#FFFFFF"
-    tools:context=".MainActivity">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable
+            name="vm"
+            type="com.greezxii.mobilecontroller.viewmodel.MainViewModel" />
+    </data>
 
-    <Spinner
-        android:id="@+id/spinner_addresses"
-        android:layout_width="0dp"
-        android:layout_height="32dp"
-        android:contentDescription="@string/spinner_addresses"
-        android:minWidth="200dp"
-        app:layout_constraintEnd_toEndOf="@+id/recycler_addresses"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FFFFFF"
+        tools:context=".MainActivity">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_addresses"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:minWidth="260dp"
-        app:layout_constraintBottom_toTopOf="@+id/textView_label_inspectionsCount"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinner_addresses" />
+        <Spinner
+            android:id="@+id/spinner_addresses"
+            android:layout_width="0dp"
+            android:layout_height="32dp"
+            android:contentDescription="@string/spinner_addresses"
+            android:minWidth="200dp"
+            app:layout_constraintEnd_toEndOf="@+id/recycler_addresses"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/button_settings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:text="@string/Settings"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/spinner_addresses"
-        app:layout_constraintTop_toTopOf="parent" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_addresses"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:minWidth="260dp"
+            app:layout_constraintBottom_toTopOf="@+id/textView_label_inspectionsCount"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/spinner_addresses" />
 
-    <EditText
-        android:id="@+id/editText_value"
-        android:layout_width="wrap_content"
-        android:layout_height="48dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:autofillHints=""
-        android:ems="10"
-        android:hint="@string/Value"
-        android:inputType="number"
-        android:textColor="#000000"
-        android:textColorHint="#757575"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/recycler_addresses"
-        app:layout_constraintTop_toBottomOf="@+id/button_settings" />
+        <Button
+            android:id="@+id/button_settings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:text="@string/Settings"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/spinner_addresses"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.switchmaterial.SwitchMaterial
-        android:id="@+id/switch_isZeroValue"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginEnd="8dp"
-        android:text="@string/isZeroValue"
-        app:layout_constraintBottom_toTopOf="@+id/editText_note"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/editText_value"
-        app:layout_constraintTop_toTopOf="@+id/editText_value" />
+        <EditText
+            android:id="@+id/editText_value"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:autofillHints=""
+            android:ems="10"
+            android:hint="@string/Value"
+            android:inputType="number"
+            android:textColor="#000000"
+            android:textColorHint="#757575"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/recycler_addresses"
+            app:layout_constraintTop_toBottomOf="@+id/button_settings" />
 
-    <TextView
-        android:id="@+id/textView_label_contract"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/Contract"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        app:layout_constraintStart_toEndOf="@+id/recycler_addresses"
-        app:layout_constraintTop_toBottomOf="@+id/editText_note" />
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/switch_isZeroValue"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginEnd="8dp"
+            android:text="@string/isZeroValue"
+            app:layout_constraintBottom_toTopOf="@+id/editText_note"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/editText_value"
+            app:layout_constraintTop_toTopOf="@+id/editText_value" />
 
-    <TextView
-        android:id="@+id/textView_contract"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.19"
-        app:layout_constraintStart_toEndOf="@+id/textView_label_contract"
-        app:layout_constraintTop_toBottomOf="@+id/editText_note" />
+        <TextView
+            android:id="@+id/textView_label_contract"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/Contract"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@+id/recycler_addresses"
+            app:layout_constraintTop_toBottomOf="@+id/editText_note" />
 
-    <TextView
-        android:id="@+id/textView_label_fullName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="@string/fullName"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="@+id/textView_label_contract"
-        app:layout_constraintTop_toBottomOf="@+id/textView_label_contract" />
+        <TextView
+            android:id="@+id/textView_contract"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:text="@{String.valueOf(vm.selectedInspection.id)}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.19"
+            app:layout_constraintStart_toEndOf="@+id/textView_label_contract"
+            app:layout_constraintTop_toBottomOf="@+id/editText_note" />
 
-    <TextView
-        android:id="@+id/textView_fullName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/textView_contract"
-        app:layout_constraintTop_toBottomOf="@+id/textView_contract" />
+        <TextView
+            android:id="@+id/textView_label_fullName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/fullName"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="@+id/textView_label_contract"
+            app:layout_constraintTop_toBottomOf="@+id/textView_label_contract" />
 
-    <TextView
-        android:id="@+id/textView_label_phoneNumber"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="@string/phoneNumber"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="@+id/textView_label_fullName"
-        app:layout_constraintTop_toBottomOf="@+id/textView_label_fullName" />
+        <TextView
+            android:id="@+id/textView_fullName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:text="@{vm.selectedInspection.fullName}"
+            app:layout_constraintStart_toStartOf="@+id/textView_contract"
+            app:layout_constraintTop_toBottomOf="@+id/textView_contract" />
 
-    <TextView
-        android:id="@+id/textView_phoneNumber"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/textView_fullName"
-        app:layout_constraintTop_toBottomOf="@+id/textView_fullName" />
+        <TextView
+            android:id="@+id/textView_label_phoneNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/phoneNumber"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="@+id/textView_label_fullName"
+            app:layout_constraintTop_toBottomOf="@+id/textView_label_fullName" />
 
-    <TextView
-        android:id="@+id/textView_label_meter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="@string/meter"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="@+id/textView_label_phoneNumber"
-        app:layout_constraintTop_toBottomOf="@+id/textView_label_phoneNumber" />
+        <TextView
+            android:id="@+id/textView_phoneNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:text="@{vm.selectedInspection.contacts}"
+            app:layout_constraintStart_toStartOf="@+id/textView_fullName"
+            app:layout_constraintTop_toBottomOf="@+id/textView_fullName" />
 
-    <TextView
-        android:id="@+id/textView_meter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/textView_phoneNumber"
-        app:layout_constraintTop_toBottomOf="@+id/textView_phoneNumber" />
+        <TextView
+            android:id="@+id/textView_label_meter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/meter"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="@+id/textView_label_phoneNumber"
+            app:layout_constraintTop_toBottomOf="@+id/textView_label_phoneNumber" />
 
-    <TextView
-        android:id="@+id/textView_label_installationDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="@string/installationDate"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="@+id/textView_label_meter"
-        app:layout_constraintTop_toBottomOf="@+id/textView_label_meter" />
+        <TextView
+            android:id="@+id/textView_meter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:text="@{vm.selectedInspection.meterModel}"
+            app:layout_constraintStart_toStartOf="@+id/textView_phoneNumber"
+            app:layout_constraintTop_toBottomOf="@+id/textView_phoneNumber" />
 
-    <TextView
-        android:id="@+id/textView_installationDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/textView_meter"
-        app:layout_constraintTop_toBottomOf="@+id/textView_meter" />
+        <TextView
+            android:id="@+id/textView_label_installationDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/installationDate"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="@+id/textView_label_meter"
+            app:layout_constraintTop_toBottomOf="@+id/textView_label_meter" />
 
-    <TextView
-        android:id="@+id/textView_label_isDisabled"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="@string/isDisabled"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="@+id/textView_label_installationDate"
-        app:layout_constraintTop_toBottomOf="@+id/textView_label_installationDate" />
+        <TextView
+            android:id="@+id/textView_installationDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:text="@{vm.selectedInspection.installationDate.toString()}"
+            app:layout_constraintStart_toStartOf="@+id/textView_meter"
+            app:layout_constraintTop_toBottomOf="@+id/textView_meter" />
 
-    <TextView
-        android:id="@+id/textView_isDisabled"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/textView_installationDate"
-        app:layout_constraintTop_toBottomOf="@+id/textView_installationDate" />
+        <TextView
+            android:id="@+id/textView_label_isDisabled"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/isDisabled"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="@+id/textView_label_installationDate"
+            app:layout_constraintTop_toBottomOf="@+id/textView_label_installationDate" />
 
-    <TextView
-        android:id="@+id/textView_label_debt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="@string/debt"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="@+id/textView_label_isDisabled"
-        app:layout_constraintTop_toBottomOf="@+id/textView_label_isDisabled" />
+        <TextView
+            android:id="@+id/textView_isDisabled"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:text="@{String.valueOf(vm.selectedInspection.isDisabled)}"
+            app:layout_constraintStart_toStartOf="@+id/textView_installationDate"
+            app:layout_constraintTop_toBottomOf="@+id/textView_installationDate" />
 
-    <TextView
-        android:id="@+id/textView_debt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/textView_isDisabled"
-        app:layout_constraintTop_toBottomOf="@+id/textView_isDisabled" />
+        <TextView
+            android:id="@+id/textView_label_debt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/debt"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="@+id/textView_label_isDisabled"
+            app:layout_constraintTop_toBottomOf="@+id/textView_label_isDisabled" />
 
-    <TextView
-        android:id="@+id/textView_label_inspectionDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="@string/inspectionDate"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="@+id/textView_label_debt"
-        app:layout_constraintTop_toBottomOf="@+id/textView_label_debt" />
+        <TextView
+            android:id="@+id/textView_debt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:text="@{vm.selectedInspection.debt.toString()}"
+            app:layout_constraintStart_toStartOf="@+id/textView_isDisabled"
+            app:layout_constraintTop_toBottomOf="@+id/textView_isDisabled" />
 
-    <TextView
-        android:id="@+id/textView_inspectionDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/textView_debt"
-        app:layout_constraintTop_toBottomOf="@+id/textView_debt" />
+        <TextView
+            android:id="@+id/textView_label_inspectionDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/inspectionDate"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="@+id/textView_label_debt"
+            app:layout_constraintTop_toBottomOf="@+id/textView_label_debt" />
 
-    <TextView
-        android:id="@+id/textView_label_isByActs"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="@string/isByActs"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="@+id/textView_label_inspectionDate"
-        app:layout_constraintTop_toBottomOf="@+id/textView_label_inspectionDate" />
+        <TextView
+            android:id="@+id/textView_inspectionDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:text="@{vm.selectedInspection.lastInspectionDate.toString()}"
+            app:layout_constraintStart_toStartOf="@+id/textView_debt"
+            app:layout_constraintTop_toBottomOf="@+id/textView_debt" />
 
-    <TextView
-        android:id="@+id/textView_isByAct"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/textView_inspectionDate"
-        app:layout_constraintTop_toBottomOf="@+id/textView_inspectionDate" />
+        <TextView
+            android:id="@+id/textView_label_isByActs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/isByActs"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="@+id/textView_label_inspectionDate"
+            app:layout_constraintTop_toBottomOf="@+id/textView_label_inspectionDate" />
 
-    <TextView
-        android:id="@+id/textView_label_verification"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="12dp"
-        android:text="@string/verification"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toStartOf="@+id/textView_verification"
-        app:layout_constraintTop_toBottomOf="@+id/textView_meter" />
+        <TextView
+            android:id="@+id/textView_isByAct"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:text="@{vm.selectedInspection.debtByActs.toString()}"
+            app:layout_constraintStart_toStartOf="@+id/textView_inspectionDate"
+            app:layout_constraintTop_toBottomOf="@+id/textView_inspectionDate" />
 
-    <TextView
-        android:id="@+id/textView_label_isAntimagnet"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="@string/isAntimagnet"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="@+id/textView_label_verification"
-        app:layout_constraintTop_toBottomOf="@+id/textView_label_verification" />
+        <TextView
+            android:id="@+id/textView_label_verification"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="12dp"
+            android:text="@string/verification"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toStartOf="@+id/textView_verification"
+            app:layout_constraintTop_toBottomOf="@+id/textView_meter" />
 
-    <TextView
-        android:id="@+id/textView_label_paymentDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="@string/paymentDate"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="@+id/textView_label_isAntimagnet"
-        app:layout_constraintTop_toBottomOf="@+id/textView_label_isAntimagnet" />
+        <TextView
+            android:id="@+id/textView_label_isAntimagnet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/isAntimagnet"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="@+id/textView_label_verification"
+            app:layout_constraintTop_toBottomOf="@+id/textView_label_verification" />
 
-    <TextView
-        android:id="@+id/textView_verification"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="8dp"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView_meter" />
+        <TextView
+            android:id="@+id/textView_label_paymentDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/paymentDate"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="@+id/textView_label_isAntimagnet"
+            app:layout_constraintTop_toBottomOf="@+id/textView_label_isAntimagnet" />
 
-    <TextView
-        android:id="@+id/textView_isAntimagnet"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/textView_verification"
-        app:layout_constraintTop_toBottomOf="@+id/textView_verification" />
+        <TextView
+            android:id="@+id/textView_verification"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="8dp"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:text="@{vm.selectedInspection.verificationDate.toString()}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView_meter" />
 
-    <TextView
-        android:id="@+id/textView_paymentDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/textView_isAntimagnet"
-        app:layout_constraintTop_toBottomOf="@+id/textView_isAntimagnet" />
+        <TextView
+            android:id="@+id/textView_isAntimagnet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:text="@{String.valueOf(vm.selectedInspection.isAntimagnet)}"
+            app:layout_constraintStart_toStartOf="@+id/textView_verification"
+            app:layout_constraintTop_toBottomOf="@+id/textView_verification" />
 
-    <Button
-        android:id="@+id/button_openInfo"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginEnd="8dp"
-        android:text="@string/openInfo"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <TextView
+            android:id="@+id/textView_paymentDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:text="@{vm.selectedInspection.paymentDate.toString()}"
+            app:layout_constraintStart_toStartOf="@+id/textView_isAntimagnet"
+            app:layout_constraintTop_toBottomOf="@+id/textView_isAntimagnet" />
 
-    <TextView
-        android:id="@+id/textView_label_inspectionsCount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/inspectionsCount"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        <Button
+            android:id="@+id/button_openInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginEnd="8dp"
+            android:text="@string/openInfo"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-    <TextView
-        android:id="@+id/textView_inspectionsCount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text="197"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textView_label_inspectionsCount" />
+        <TextView
+            android:id="@+id/textView_label_inspectionsCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/inspectionsCount"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
-        android:id="@+id/textView_label_completedCount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:text="@string/completedCount"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textView_inspectionsCount" />
+        <TextView
+            android:id="@+id/textView_inspectionsCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="197"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textView_label_inspectionsCount" />
 
-    <TextView
-        android:id="@+id/textView_completedCount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text="193"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/textView_label_isByActs"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/textView_label_completedCount" />
+        <TextView
+            android:id="@+id/textView_label_completedCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="@string/completedCount"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textView_inspectionsCount" />
 
-    <EditText
-        android:id="@+id/editText_note"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:layout_marginEnd="8dp"
-        android:autofillHints=""
-        android:ems="10"
-        android:hint="@string/note"
-        android:inputType="text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/editText_value"
-        app:layout_constraintTop_toBottomOf="@+id/editText_value" />
+        <TextView
+            android:id="@+id/textView_completedCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="193"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/textView_label_isByActs"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/textView_label_completedCount" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <EditText
+            android:id="@+id/editText_note"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="8dp"
+            android:autofillHints=""
+            android:ems="10"
+            android:hint="@string/note"
+            android:inputType="text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/editText_value"
+            app:layout_constraintTop_toBottomOf="@+id/editText_value" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
