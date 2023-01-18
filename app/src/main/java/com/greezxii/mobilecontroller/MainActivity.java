@@ -2,6 +2,7 @@ package com.greezxii.mobilecontroller;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.lifecycle.ViewModel;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -9,6 +10,9 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.widget.Button;
+
+import com.greezxii.mobilecontroller.Repository.DataRepository;
+import com.greezxii.mobilecontroller.ViewModel.MainViewModel;
 import com.greezxii.mobilecontroller.database.Inspection;
 import com.greezxii.mobilecontroller.recycler.InspectionsRecyclerAdapter;
 
@@ -16,7 +20,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private DataManager dm;
+    private DataRepository dm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,10 +28,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         initButtons();
 
-        dm = new DataManager(this);
-        dm.makeInspectionsCacheFromMock(this.getAssets());
-        List<Inspection> inspections = dm.getAllInspections();
-        initRecycler(inspections);
+        DataRepository repository = new DataRepository(this);
+        MainViewModel vm = new MainViewModel(repository);
+        initRecycler(vm.getInspections());
     }
 
     private void initRecycler(List<Inspection> data) {
