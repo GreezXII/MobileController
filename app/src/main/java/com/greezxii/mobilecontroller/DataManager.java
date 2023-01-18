@@ -93,10 +93,13 @@ public class DataManager {
             @Override
             public void run() {
                 super.run();
+                InspectionDao inspectionDao = db.inspectionDao();
+                List<Inspection> inspections = inspectionDao.getAllInspections();
+                if (!inspections.isEmpty())
+                    return;
                 try(InputStream inputStream = assetManager.open("input.db")) {
                     String fileContent = IOUtils.toString(inputStream, Charset.defaultCharset());
-                    ArrayList<Inspection> inspections = parseInspections(fileContent);
-                    InspectionDao inspectionDao = db.inspectionDao();
+                    inspections = parseInspections(fileContent);
                     inspectionDao.insertAll(inspections.toArray(new Inspection[0]));
                 } catch (IOException e) {
                     e.printStackTrace();
