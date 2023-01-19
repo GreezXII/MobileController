@@ -164,7 +164,7 @@
             android:textColor="#000000"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:text="@{vm.selectedInspection.meterModel}"
+            app:meter="@{vm.selectedInspection}"
             app:layout_constraintStart_toStartOf="@+id/textView_phoneNumber"
             app:layout_constraintTop_toBottomOf="@+id/textView_phoneNumber" />
 
