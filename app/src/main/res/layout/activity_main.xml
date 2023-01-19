@@ -187,7 +187,7 @@
             android:textColor="#000000"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:text="@{vm.selectedInspection.installationDate.toString()}"
+            app:date="@{vm.selectedInspection.installationDate}"
             app:layout_constraintStart_toStartOf="@+id/textView_meter"
             app:layout_constraintTop_toBottomOf="@+id/textView_meter" />
 
@@ -256,7 +256,7 @@
             android:textColor="#000000"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:text="@{vm.selectedInspection.lastInspectionDate.toString()}"
+            app:date="@{vm.selectedInspection.lastInspectionDate}"
             app:layout_constraintStart_toStartOf="@+id/textView_debt"
             app:layout_constraintTop_toBottomOf="@+id/textView_debt" />
 
@@ -326,7 +326,7 @@
             android:textColor="#000000"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:text="@{vm.selectedInspection.verificationDate.toString()}"
+            app:date="@{vm.selectedInspection.verificationDate}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView_meter" />
 
@@ -350,7 +350,7 @@
             android:textColor="#000000"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:text="@{vm.selectedInspection.paymentDate.toString()}"
+            app:date="@{vm.selectedInspection.paymentDate}"
             app:layout_constraintStart_toStartOf="@+id/textView_isAntimagnet"
             app:layout_constraintTop_toBottomOf="@+id/textView_isAntimagnet" />
 
