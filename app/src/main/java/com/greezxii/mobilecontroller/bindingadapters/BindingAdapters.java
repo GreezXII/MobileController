@@ -22,4 +22,11 @@ public class BindingAdapters {
                 inspection.numberOfDigits);
         view.setText(result);
     }
+    @BindingAdapter("booleanValue")
+    public static void setBoolean(TextView view, boolean value) {
+        if (value)
+            view.setText("да");
+        else
+            view.setText("нет");
+    }
 }
