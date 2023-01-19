@@ -1,8 +1,10 @@
 package com.greezxii.mobilecontroller.bindingadapters;
 
+import android.graphics.Color;
 import android.widget.TextView;
 import androidx.databinding.BindingAdapter;
 import com.greezxii.mobilecontroller.database.Inspection;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
@@ -28,5 +30,15 @@ public class BindingAdapters {
             view.setText("да");
         else
             view.setText("нет");
+    }
+    @BindingAdapter("coloredValue")
+    public static void setColored(TextView view, BigDecimal value) {
+        BigDecimal zero = new BigDecimal(0);
+        if (value.compareTo(zero) < 0)
+            view.setTextColor(Color.RED);
+        else
+            view.setTextColor(Color.BLACK);
+        String s = String.format(new Locale("ru"), "%.2f", value);
+        view.setText(s);
     }
 }
