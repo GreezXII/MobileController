@@ -261,7 +261,7 @@
             app:layout_constraintTop_toBottomOf="@+id/textView_debt" />
 
         <TextView
-            android:id="@+id/textView_label_isByActs"
+            android:id="@+id/textView_label_debtByActs"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
@@ -272,14 +272,14 @@
             app:layout_constraintTop_toBottomOf="@+id/textView_label_inspectionDate" />
 
         <TextView
-            android:id="@+id/textView_isByAct"
+            android:id="@+id/textView_debtByAct"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:textColor="#000000"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:text="@{vm.selectedInspection.debtByActs.toString()}"
+            app:debtByActs="@{vm.selectedInspection.debtByActs}"
             app:layout_constraintStart_toStartOf="@+id/textView_inspectionDate"
             app:layout_constraintTop_toBottomOf="@+id/textView_inspectionDate" />
 

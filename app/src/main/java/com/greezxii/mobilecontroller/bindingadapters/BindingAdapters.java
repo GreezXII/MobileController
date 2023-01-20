@@ -38,7 +38,14 @@ public class BindingAdapters {
             view.setTextColor(Color.RED);
         else
             view.setTextColor(Color.BLACK);
-        String s = String.format(new Locale("ru"), "%.2f", value);
-        view.setText(s);
+        view.setText(String.format(new Locale("ru"), "%.2f", value));
+    }
+    @BindingAdapter("debtByActs")
+    public static void setDebtByActs(TextView view, BigDecimal value) {
+        BigDecimal zero = new BigDecimal(0);
+        if (value.compareTo(zero) == 0)
+            view.setText("нет");
+        else
+            view.setText(String.format(new Locale("ru"), "%.2f", value));
     }
 }
