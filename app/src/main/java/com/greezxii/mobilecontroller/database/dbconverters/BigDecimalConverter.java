@@ -1,4 +1,4 @@
-package com.greezxii.mobilecontroller.database.converters;
+package com.greezxii.mobilecontroller.database.dbconverters;
 
 import androidx.room.TypeConverter;
 import java.math.BigDecimal;

@@ -3,6 +3,8 @@ package com.greezxii.mobilecontroller.bindingadapters;
 import android.graphics.Color;
 import android.widget.TextView;
 import androidx.databinding.BindingAdapter;
+import androidx.databinding.InverseMethod;
+
 import com.greezxii.mobilecontroller.database.Inspection;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -47,5 +49,12 @@ public class BindingAdapters {
             view.setText("нет");
         else
             view.setText(String.format(new Locale("ru"), "%.2f", value));
+    }
+    @InverseMethod("stringToInt")
+    public static String intToString(int value) {
+        return String.valueOf(value);
+    }
+    public static int stringToInt(String value) {
+        return Integer.parseInt(value);
     }
 }

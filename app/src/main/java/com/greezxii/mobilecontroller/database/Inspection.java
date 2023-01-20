@@ -5,8 +5,8 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
-import com.greezxii.mobilecontroller.database.converters.BigDecimalConverter;
-import com.greezxii.mobilecontroller.database.converters.LocalDateConverter;
+import com.greezxii.mobilecontroller.database.dbconverters.BigDecimalConverter;
+import com.greezxii.mobilecontroller.database.dbconverters.LocalDateConverter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -44,6 +44,7 @@ public class Inspection {
     public LocalDate verificationDate;
     public int numberOfDigits;
     public String info;
+    public String note;
 
     public void fromString(@NonNull String s) {
         String[] row = s.split("[|]");
@@ -88,7 +89,11 @@ public class Inspection {
     private Integer findBlockNumber(String s) {
         // Соответствует номеру корпуса. "кор."
         String regex = "(?<=кор\\.)\\d*";
-        return Integer.parseInt(findMatch(s, regex));
+        String match = findMatch(s, regex);
+        if (match != null)
+            return Integer.parseInt(match);
+        else
+            return null;
     }
     private String findMatch(String s, String regex) {
         Pattern pattern = Pattern.compile(regex);

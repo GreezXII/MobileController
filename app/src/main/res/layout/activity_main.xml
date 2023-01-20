@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
+        <import type="com.greezxii.mobilecontroller.bindingadapters.BindingAdapters"/>
         <variable
             name="vm"
             type="com.greezxii.mobilecontroller.viewmodel.MainViewModel" />
@@ -56,6 +57,7 @@
             android:inputType="number"
             android:textColor="#000000"
             android:textColorHint="#757575"
+            android:text="@={BindingAdapters.intToString(vm.selectedInspection.value)}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/recycler_addresses"
@@ -404,7 +406,7 @@
             android:textColor="#000000"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/textView_label_isByActs"
+            app:layout_constraintEnd_toStartOf="@+id/textView_label_debtByActs"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/textView_label_completedCount" />
 
@@ -417,6 +419,7 @@
             android:ems="10"
             android:hint="@string/note"
             android:inputType="text"
+            android:text="@={vm.selectedInspection.note}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/editText_value"
             app:layout_constraintTop_toBottomOf="@+id/editText_value" />
