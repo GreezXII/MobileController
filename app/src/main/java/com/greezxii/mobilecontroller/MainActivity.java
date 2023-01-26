@@ -3,12 +3,15 @@ package com.greezxii.mobilecontroller;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 
 import com.greezxii.mobilecontroller.databinding.ActivityMainBinding;
@@ -24,9 +27,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        initButtons();
         initViewModel();
+        initButtons();
         initRecycler(vm.getInspections());
     }
 
@@ -34,13 +36,22 @@ public class MainActivity extends AppCompatActivity {
         DataRepository repository = new DataRepository(this);
         vm = new MainViewModel(repository);
         ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        binding.setLifecycleOwner(this);
         binding.setVm(vm);
     }
 
     private void initRecycler(List<Inspection> data) {
         RecyclerView recyclerView = findViewById(R.id.recycler_addresses);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new InspectionsRecyclerAdapter(getApplicationContext(), data));
+
+        InspectionsRecyclerAdapter.OnInspectionClickListener clickListener =
+                (inspection, position) -> {
+                    Inspection selected = vm.inspections.get(position);
+                    vm.selectedInspection.setValue(selected);
+                };
+        InspectionsRecyclerAdapter adapter = new InspectionsRecyclerAdapter(getApplicationContext(), data, clickListener);
+        recyclerView.setAdapter(adapter);
+
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, RecyclerView.VERTICAL);
         Drawable divider = ResourcesCompat.getDrawable(getResources(), R.drawable.divider_drawable, null);
         if(divider != null)

@@ -8,7 +8,8 @@ import java.util.List;
 
 public class MainViewModel extends ViewModel {
     private final DataRepository repository;
-    private List<Inspection> inspections;
+
+    public List<Inspection> inspections;
     public List<Inspection> getInspections() {
         if (inspections == null) {
             repository.makeInspectionsCacheFromMock();
@@ -17,13 +18,9 @@ public class MainViewModel extends ViewModel {
         selectedInspection = new MutableLiveData<>(inspections.get(0));
         return inspections;
     }
-    private MutableLiveData<Inspection> selectedInspection;
-    public MutableLiveData<Inspection> getSelectedInspection() {
-        return selectedInspection;
-    }
-    public void setSelectedInspection(MutableLiveData<Inspection> selectedInspection) {
-        this.selectedInspection = selectedInspection;
-    }
+
+    public MutableLiveData<Inspection> selectedInspection;
+
     public MainViewModel(DataRepository repository)
     {
         this.repository = repository;

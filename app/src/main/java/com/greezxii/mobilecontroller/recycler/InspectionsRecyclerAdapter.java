@@ -7,18 +7,23 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.greezxii.mobilecontroller.R;
 import com.greezxii.mobilecontroller.database.Inspection;
-
 import java.util.List;
 
 public class InspectionsRecyclerAdapter extends RecyclerView.Adapter<ItemViewHolder> {
-
     Context context;
     List<Inspection> items;
 
-    public InspectionsRecyclerAdapter(Context context, List<Inspection> items) {
+    public InspectionsRecyclerAdapter(Context context, List<Inspection> items, OnInspectionClickListener onClickListener) {
         this.context = context;
         this.items = items;
+        this.onInspectionClick = onClickListener;
     }
+
+    public interface OnInspectionClickListener {
+        void onInspectionClick(Inspection inspection, int position);
+    }
+
+    private final OnInspectionClickListener onInspectionClick;
 
     @NonNull
     @Override
@@ -28,8 +33,11 @@ public class InspectionsRecyclerAdapter extends RecyclerView.Adapter<ItemViewHol
 
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
-        Inspection entity = items.get(position);
-        holder.item_address.setText(entity.toString());
+        Inspection inspection = items.get(position);
+        holder.item_address.setText(inspection.toString());
+        holder.itemView.setOnClickListener(view -> {
+            onInspectionClick.onInspectionClick(inspection, position);
+        });
     }
 
     @Override
