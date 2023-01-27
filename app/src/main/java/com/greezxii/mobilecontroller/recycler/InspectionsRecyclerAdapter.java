@@ -20,7 +20,7 @@ public class InspectionsRecyclerAdapter extends RecyclerView.Adapter<ItemViewHol
     }
 
     public interface OnInspectionClickListener {
-        void onInspectionClick(Inspection inspection, int position);
+        void onInspectionClick(int position);
     }
 
     private final OnInspectionClickListener onInspectionClick;
@@ -36,7 +36,7 @@ public class InspectionsRecyclerAdapter extends RecyclerView.Adapter<ItemViewHol
         Inspection inspection = items.get(position);
         holder.item_address.setText(inspection.toString());
         holder.itemView.setOnClickListener(view -> {
-            onInspectionClick.onInspectionClick(inspection, position);
+            onInspectionClick.onInspectionClick(position);
         });
     }
 

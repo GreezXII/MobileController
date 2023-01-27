@@ -55,6 +55,7 @@ public class DataRepository {
         }
         return worker.result;
     }
+
     private ArrayList<Inspection> parseInspections(String fileContent) {
         String[] lines = fileContent.split("\r\n");
 
@@ -68,6 +69,7 @@ public class DataRepository {
         }
         return entities;
     }
+
     public void makeInspectionsCacheFromTFTP() {
         class Worker extends Thread {
             @Override
@@ -87,6 +89,7 @@ public class DataRepository {
             e.printStackTrace();
         }
     }
+
     public void makeInspectionsCacheFromMock() {
         class Worker extends Thread {
             @Override
@@ -113,6 +116,7 @@ public class DataRepository {
             e.printStackTrace();
         }
     }
+
     public List<Inspection> getAllInspections() {
         class Worker extends Thread {
             List<Inspection> result;
@@ -133,4 +137,18 @@ public class DataRepository {
         }
         return worker.result;
     }
+
+    public void updateInspection(Inspection inspection) {
+        class Worker extends Thread {
+            @Override
+            public void run() {
+                super.run();
+                InspectionDao inspectionDao = db.inspectionDao();
+                inspectionDao.updateInspection(inspection);
+            }
+        }
+        Worker worker = new Worker();
+        worker.start();
+    }
+
 }

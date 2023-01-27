@@ -9,6 +9,11 @@ import java.util.List;
 public class MainViewModel extends ViewModel {
     private final DataRepository repository;
 
+    public MainViewModel(DataRepository repository)
+    {
+        this.repository = repository;
+    }
+
     public List<Inspection> inspections;
     public List<Inspection> getInspections() {
         if (inspections == null) {
@@ -21,8 +26,9 @@ public class MainViewModel extends ViewModel {
 
     public MutableLiveData<Inspection> selectedInspection;
 
-    public MainViewModel(DataRepository repository)
-    {
-        this.repository = repository;
-    }
+    public void onSelect(int position) {
+        repository.updateInspection(selectedInspection.getValue());
+        Inspection selected = inspections.get(position);
+        selectedInspection.setValue(selected);
+    };
 }

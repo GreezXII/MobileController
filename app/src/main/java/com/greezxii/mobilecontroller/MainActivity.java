@@ -45,9 +45,8 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         InspectionsRecyclerAdapter.OnInspectionClickListener clickListener =
-                (inspection, position) -> {
-                    Inspection selected = vm.inspections.get(position);
-                    vm.selectedInspection.setValue(selected);
+                (position) -> {
+                    vm.onSelect(position);
                 };
         InspectionsRecyclerAdapter adapter = new InspectionsRecyclerAdapter(getApplicationContext(), data, clickListener);
         recyclerView.setAdapter(adapter);
@@ -59,8 +58,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.addItemDecoration(dividerItemDecoration);
     }
 
-    private void initButtons()
-    {
+    private void initButtons() {
         Button button;
         // Settings button
         button = findViewById(R.id.button_settings);

@@ -2,6 +2,7 @@ package com.greezxii.mobilecontroller.database;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
@@ -35,7 +36,6 @@ public class Inspection {
     public LocalDate paymentDate;
     public BigDecimal debt;
     public LocalDate lastInspectionDate;
-    public int value;
     public boolean isAntimagnet;
     public boolean isDisabled;
     public BigDecimal debtByActs;
@@ -45,6 +45,11 @@ public class Inspection {
     public int numberOfDigits;
     public String info;
     public String note;
+    public int value;
+    // Поле для отслеживания изменений, true - пользователь внёс изменения, иначе false.
+    // Не записывается в базу данных
+    @Ignore
+    public boolean isChanged;
 
     public void fromString(@NonNull String s) {
         String[] row = s.split("[|]");
@@ -76,16 +81,19 @@ public class Inspection {
     private LocalDate stringToLocalDate(String s) {
         return LocalDate.parse(s, DateTimeFormatter.ofPattern("dd.MM.yy"));
     }
+
     private String findBuildingLetter(String s) {
         // Соответствует букве дома. Поиск по префиксу "дом.N-" где N - это номер дома из 1-3 цифр
         String regex = "((?<=дом\\.[0-9][0-9][0-9]-)|(?<=дом\\.[0-9][0-9]-)|(?<=дом\\.[0-9]-))[а-яА-Я]";
         return findMatch(s, regex);
     }
+
     private String findBlockLetter(String s) {
         // Соответствует букве корпуса. Поиск по префиксу "кор.N-" где N - это номер корпуса из 1-2 цифр
         String regex = "((?<=кор\\.[0-9][0-9]-)|(?<=кор\\.[0-9]-))[а-яА-Я]";
         return findMatch(s, regex);
     }
+
     private Integer findBlockNumber(String s) {
         // Соответствует номеру корпуса. "кор."
         String regex = "(?<=кор\\.)\\d*";
@@ -95,6 +103,7 @@ public class Inspection {
         else
             return null;
     }
+
     private String findMatch(String s, String regex) {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(s);
@@ -105,6 +114,7 @@ public class Inspection {
             return null;
         }
     }
+
     @NonNull
     @Override
     public String toString() {
@@ -122,4 +132,5 @@ public class Inspection {
             result.append(apartmentLetter);
         return result.toString();
     }
+
 }
