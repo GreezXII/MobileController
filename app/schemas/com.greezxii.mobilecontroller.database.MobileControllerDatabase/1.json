@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "abca2b94b24adcb82b17efe65bb2f60e",
+    "identityHash": "885d558552642cde3076ce6f7e57d385",
     "entities": [
       {
         "tableName": "Inspection",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `street` TEXT, `buildingNumber` INTEGER NOT NULL, `buildingLetter` TEXT, `blockNumber` INTEGER, `blockLetter` TEXT, `apartmentNumber` INTEGER, `apartmentLetter` TEXT, `fullName` TEXT, `meterSerialId` TEXT, `meterModel` TEXT, `paymentDate` INTEGER, `debt` TEXT, `lastInspectionDate` INTEGER, `value` INTEGER NOT NULL, `isAntimagnet` INTEGER NOT NULL, `isDisabled` INTEGER NOT NULL, `debtByActs` TEXT, `contacts` TEXT, `installationDate` INTEGER, `verificationDate` INTEGER, `numberOfDigits` INTEGER NOT NULL, `info` TEXT, `note` TEXT, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `street` TEXT, `buildingNumber` INTEGER NOT NULL, `buildingLetter` TEXT, `blockNumber` INTEGER, `blockLetter` TEXT, `apartmentNumber` INTEGER, `apartmentLetter` TEXT, `fullName` TEXT, `meterSerialId` TEXT, `meterModel` TEXT, `paymentDate` INTEGER, `debt` TEXT, `lastInspectionDate` INTEGER, `isAntimagnet` INTEGER NOT NULL, `isDisabled` INTEGER NOT NULL, `debtByActs` TEXT, `contacts` TEXT, `installationDate` INTEGER, `verificationDate` INTEGER, `numberOfDigits` INTEGER NOT NULL, `info` TEXT, `note` TEXT, `value` INTEGER, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -93,12 +93,6 @@
             "notNull": false
           },
           {
-            "fieldPath": "value",
-            "columnName": "value",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
             "fieldPath": "isAntimagnet",
             "columnName": "isAntimagnet",
             "affinity": "INTEGER",
@@ -151,6 +145,12 @@
             "columnName": "note",
             "affinity": "TEXT",
             "notNull": false
+          },
+          {
+            "fieldPath": "value",
+            "columnName": "value",
+            "affinity": "INTEGER",
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -166,7 +166,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'abca2b94b24adcb82b17efe65bb2f60e')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '885d558552642cde3076ce6f7e57d385')"
     ]
   }
 }

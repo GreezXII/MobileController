@@ -24,6 +24,10 @@ public class MainViewModel extends ViewModel {
         return inspections;
     }
 
+    public void deleteInspections() {
+        repository.deleteInspections(inspections);
+    }
+
     public MutableLiveData<Inspection> selectedInspection;
 
     public void onSelect(int position) {
@@ -31,4 +35,5 @@ public class MainViewModel extends ViewModel {
         Inspection selected = inspections.get(position);
         selectedInspection.setValue(selected);
     };
+
 }

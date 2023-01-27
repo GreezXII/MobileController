@@ -151,4 +151,21 @@ public class DataRepository {
         worker.start();
     }
 
+    public void deleteInspections(List<Inspection> inspections) {
+        class Worker extends Thread {
+            @Override
+            public void run() {
+                super.run();
+                InspectionDao inspectionDao = db.inspectionDao();
+                inspectionDao.deleteAll(inspections.toArray(new Inspection[0]));
+            }
+        }
+        Worker worker = new Worker();
+        worker.start();
+        try {
+            worker.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
         initViewModel();
         initButtons();
         initRecycler(vm.getInspections());
+        //vm.deleteInspections();
     }
 
     private void initViewModel() {

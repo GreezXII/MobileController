@@ -45,7 +45,7 @@ public class Inspection {
     public int numberOfDigits;
     public String info;
     public String note;
-    public int value;
+    public Integer value;
     // Поле для отслеживания изменений, true - пользователь внёс изменения, иначе false.
     // Не записывается в базу данных
     @Ignore
@@ -68,7 +68,7 @@ public class Inspection {
         paymentDate = stringToLocalDate(row[8]);
         debt = new BigDecimal(row[9]);
         lastInspectionDate = stringToLocalDate(row[10]);
-        value = Integer.parseInt(row[11].trim());
+        //value = Integer.parseInt(row[11].trim());
         isAntimagnet = Boolean.parseBoolean(row[12]);
         isDisabled = Boolean.parseBoolean(row[13]);
         debtByActs = new BigDecimal(row[14]);

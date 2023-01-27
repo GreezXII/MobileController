@@ -56,9 +56,11 @@ public class BindingAdapters {
             view.setText(String.format(new Locale("ru"), "%.2f", value));
     }
 
-    @InverseMethod("stringToInt")
-    public static String intToString(int value) {
-        return String.valueOf(value);
+    @InverseMethod("stringToNullableInteger")
+    public static String nullableIntegerToString(Integer value) {
+        return value == null ? "" : value.toString();
     }
-    public static int stringToInt(String value) { return Integer.parseInt(value); }
+    public static Integer stringToNullableInteger(String value) {
+        return value.equals("") ? null : Integer.parseInt(value);
+    }
 }
