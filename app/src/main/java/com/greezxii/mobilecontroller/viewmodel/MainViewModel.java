@@ -11,10 +11,18 @@ public class MainViewModel extends ViewModel {
     private final DataRepository repository;
     public List<Inspection> inspections;
     public MutableLiveData<Inspection> selectedInspection;
+    public MutableLiveData<Integer> performedInspectionsCount;
 
-    public MainViewModel(DataRepository repository)
-    {
+    public MainViewModel(DataRepository repository) {
         this.repository = repository;
+        getInspections();
+        performedInspectionsCount = new MutableLiveData<>();
+        updatePerformedInspectionsCount();
+    }
+
+    private void updatePerformedInspectionsCount() {
+        Integer value = repository.getPerformedInspectionsCount();
+        performedInspectionsCount.setValue(value);
     }
 
     public List<Inspection> getInspections() {
@@ -26,18 +34,19 @@ public class MainViewModel extends ViewModel {
         return inspections;
     }
 
+    public void deleteInspections() {
+        repository.deleteInspections(inspections);
+    }
+
     public void onSelect(int position) {
         updateSelectedInspection();
+        updatePerformedInspectionsCount();
         Inspection selected = inspections.get(position);
         selectedInspection.setValue(selected);
-    };
+    }
 
     public void updateSelectedInspection() {
         repository.updateInspection(selectedInspection.getValue());
-    }
-
-    public void deleteInspections() {
-        repository.deleteInspections(inspections);
     }
 
 }

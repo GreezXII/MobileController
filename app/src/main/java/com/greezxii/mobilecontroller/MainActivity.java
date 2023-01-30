@@ -1,24 +1,22 @@
 package com.greezxii.mobilecontroller;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.res.ResourcesCompat;
-import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.greezxii.mobilecontroller.database.Inspection;
 import com.greezxii.mobilecontroller.databinding.ActivityMainBinding;
+import com.greezxii.mobilecontroller.recycler.InspectionsRecyclerAdapter;
 import com.greezxii.mobilecontroller.repository.DataRepository;
 import com.greezxii.mobilecontroller.viewmodel.MainViewModel;
-import com.greezxii.mobilecontroller.database.Inspection;
-import com.greezxii.mobilecontroller.recycler.InspectionsRecyclerAdapter;
 
 import java.util.List;
 
@@ -29,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         initViewModel();
         initButtons();
-        initRecycler(vm.getInspections());
+        initRecycler(vm.inspections);
         //vm.deleteInspections();
     }
 
@@ -51,10 +49,7 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.recycler_addresses);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        InspectionsRecyclerAdapter.OnInspectionClickListener clickListener =
-                (position) -> {
-                    vm.onSelect(position);
-                };
+        InspectionsRecyclerAdapter.OnInspectionClickListener clickListener = (position) -> vm.onSelect(position);
         InspectionsRecyclerAdapter adapter = new InspectionsRecyclerAdapter(getApplicationContext(), data, clickListener);
         recyclerView.setAdapter(adapter);
 

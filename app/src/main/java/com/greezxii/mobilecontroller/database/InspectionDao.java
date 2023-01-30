@@ -24,4 +24,7 @@ public interface InspectionDao {
 
     @Query("SELECT * FROM Inspection WHERE id = :id")
     Inspection getInspectionById(int id);
+
+    @Query("SELECT Count(*) FROM Inspection WHERE value >= 0")
+    Integer getPerformedInspectionsCount();
 }

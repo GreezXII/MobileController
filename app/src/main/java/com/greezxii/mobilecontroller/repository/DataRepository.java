@@ -17,10 +17,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DataRepository {
+
     Context _context;
-    public String TFTP_SERVER_IP = "192.168.43.93";  // 127.0.0.1
+    public String TFTP_SERVER_IP = "192.168.43.93";
     public String INPUT_FILE_NAME = "input.db";
     public MobileControllerDatabase db;
+
     public DataRepository(Context context) {
         _context = context;
         db = MobileControllerDatabase.getDatabase(_context);
@@ -149,6 +151,11 @@ public class DataRepository {
         }
         Worker worker = new Worker();
         worker.start();
+        try {
+            worker.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public void deleteInspections(List<Inspection> inspections) {
@@ -167,5 +174,24 @@ public class DataRepository {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    public Integer getPerformedInspectionsCount() {
+        class Worker extends Thread {
+            Integer result;
+            @Override
+            public void run() {
+                super.run();
+                result = db.inspectionDao().getPerformedInspectionsCount();
+            }
+        }
+        Worker worker = new Worker();
+        worker.start();
+        try {
+            worker.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return worker.result;
     }
 }
