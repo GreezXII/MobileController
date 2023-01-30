@@ -33,6 +33,12 @@ public class MainActivity extends AppCompatActivity {
         //vm.deleteInspections();
     }
 
+    @Override
+    protected void onPause() {
+        vm.updateSelectedInspection();
+        super.onPause();
+    }
+
     private void initViewModel() {
         DataRepository repository = new DataRepository(this);
         vm = new MainViewModel(repository);

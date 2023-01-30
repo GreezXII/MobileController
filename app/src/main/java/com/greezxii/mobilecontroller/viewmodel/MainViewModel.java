@@ -7,14 +7,16 @@ import com.greezxii.mobilecontroller.database.Inspection;
 import java.util.List;
 
 public class MainViewModel extends ViewModel {
+
     private final DataRepository repository;
+    public List<Inspection> inspections;
+    public MutableLiveData<Inspection> selectedInspection;
 
     public MainViewModel(DataRepository repository)
     {
         this.repository = repository;
     }
 
-    public List<Inspection> inspections;
     public List<Inspection> getInspections() {
         if (inspections == null) {
             repository.makeInspectionsCacheFromMock();
@@ -24,16 +26,18 @@ public class MainViewModel extends ViewModel {
         return inspections;
     }
 
-    public void deleteInspections() {
-        repository.deleteInspections(inspections);
-    }
-
-    public MutableLiveData<Inspection> selectedInspection;
-
     public void onSelect(int position) {
-        repository.updateInspection(selectedInspection.getValue());
+        updateSelectedInspection();
         Inspection selected = inspections.get(position);
         selectedInspection.setValue(selected);
     };
+
+    public void updateSelectedInspection() {
+        repository.updateInspection(selectedInspection.getValue());
+    }
+
+    public void deleteInspections() {
+        repository.deleteInspections(inspections);
+    }
 
 }
