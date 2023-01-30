@@ -37,19 +37,13 @@ public class BindingAdapters {
             view.setText("нет");
     }
 
-    @BindingAdapter("coloredValue")
+    @BindingAdapter("coloredDecimalValue")
     public static void setColored(TextView view, BigDecimal value) {
         BigDecimal zero = new BigDecimal(0);
         if (value.compareTo(zero) < 0)
             view.setTextColor(Color.RED);
         else
             view.setTextColor(Color.BLACK);
-        view.setText(String.format(new Locale("ru"), "%.2f", value));
-    }
-
-    @BindingAdapter("debtByActs")
-    public static void setDebtByActs(TextView view, BigDecimal value) {
-        BigDecimal zero = new BigDecimal(0);
         if (value.compareTo(zero) == 0)
             view.setText("нет");
         else
