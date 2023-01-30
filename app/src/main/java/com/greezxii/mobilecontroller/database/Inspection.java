@@ -48,8 +48,6 @@ public class Inspection {
     public Integer value;
     // Поле для отслеживания изменений, true - пользователь внёс изменения, иначе false.
     // Не записывается в базу данных
-    @Ignore
-    public boolean isChanged;
 
     public void fromString(@NonNull String s) {
         String[] row = s.split("[|]");

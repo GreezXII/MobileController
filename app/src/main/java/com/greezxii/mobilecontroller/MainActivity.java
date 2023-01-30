@@ -3,7 +3,8 @@ package com.greezxii.mobilecontroller;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.view.WindowManager;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
         initViewModel();
         initButtons();
         initRecycler(vm.inspections);
+
         //vm.deleteInspections();
     }
 
@@ -36,6 +38,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onPause() {
         vm.updateSelectedInspection();
         super.onPause();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    public void openSettings(MenuItem item) {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        this.startActivity(intent);
     }
 
     private void initViewModel() {
@@ -63,12 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initButtons() {
         Button button;
-        // Settings button
-        button = findViewById(R.id.button_settings);
-        button.setOnClickListener(view -> {
-            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
-            startActivity(intent);
-        });
+
         // Open info button
         button = findViewById(R.id.button_openInfo);
         button.setOnClickListener(view -> {

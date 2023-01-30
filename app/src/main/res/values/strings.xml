@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">MobileController</string>
     <string name="spinner_addresses">spinner_addresses</string>
-    <string name="Settings">Настройки</string>
+    <string name="settings">Настройки</string>
     <string name="Value">Показания</string>
     <string name="isZeroValue">Нулевые показания</string>
     <string name="Contract">Договор:</string>
@@ -31,4 +31,5 @@
     <string name="cancel">Отменить</string>
     <string name="close">Закрыть</string>
     <string name="info">Выписка</string>
+    <string name="search">Поиск</string>
 </resources>

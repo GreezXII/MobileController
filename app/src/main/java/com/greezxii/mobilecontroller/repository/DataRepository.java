@@ -58,20 +58,6 @@ public class DataRepository {
         return worker.result;
     }
 
-    private ArrayList<Inspection> parseInspections(String fileContent) {
-        String[] lines = fileContent.split("\r\n");
-
-        ArrayList<Inspection> entities = new ArrayList<>();
-        for (String l : lines) {
-            if (l.length() < 1)
-                continue;
-            Inspection inspection = new Inspection();
-            inspection.fromString(l);
-            entities.add(inspection);
-        }
-        return entities;
-    }
-
     public void makeInspectionsCacheFromTFTP() {
         class Worker extends Thread {
             @Override
@@ -138,6 +124,20 @@ public class DataRepository {
             e.printStackTrace();
         }
         return worker.result;
+    }
+
+    private ArrayList<Inspection> parseInspections(String fileContent) {
+        String[] lines = fileContent.split("\r\n");
+
+        ArrayList<Inspection> entities = new ArrayList<>();
+        for (String l : lines) {
+            if (l.length() < 1)
+                continue;
+            Inspection inspection = new Inspection();
+            inspection.fromString(l);
+            entities.add(inspection);
+        }
+        return entities;
     }
 
     public void updateInspection(Inspection inspection) {
