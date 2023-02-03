@@ -34,10 +34,9 @@ public class InspectionsRecyclerAdapter extends RecyclerView.Adapter<ItemViewHol
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
         Inspection inspection = items.get(position);
-        holder.item_address.setText(inspection.toString());
-        holder.itemView.setOnClickListener(view -> {
-            onInspectionClick.onInspectionClick(position);
-        });
+        String fullAddress = inspection.getAddress() + ", " + inspection.getApartment();
+        holder.item_address.setText(fullAddress);
+        holder.itemView.setOnClickListener(view -> onInspectionClick.onInspectionClick(position));
     }
 
     @Override

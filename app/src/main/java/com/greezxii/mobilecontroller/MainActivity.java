@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.greezxii.mobilecontroller.database.Inspection;
 import com.greezxii.mobilecontroller.databinding.ActivityMainBinding;
 import com.greezxii.mobilecontroller.recycler.InspectionsRecyclerAdapter;
@@ -49,6 +50,12 @@ public class MainActivity extends AppCompatActivity {
     public void openSettings(MenuItem item) {
         Intent intent = new Intent(this, SettingsActivity.class);
         this.startActivity(intent);
+    }
+
+    public void saveToTFTP(MenuItem item) {
+        vm.putDataToTFTP();
+        Snackbar snackbar = Snackbar.make(this, findViewById(R.id.button_openInfo), "OK", Snackbar.LENGTH_SHORT);
+        snackbar.show();
     }
 
     private void initViewModel() {

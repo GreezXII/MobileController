@@ -2,7 +2,6 @@ package com.greezxii.mobilecontroller.database;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
-import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
@@ -13,6 +12,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+import java.util.StringJoiner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -76,8 +76,35 @@ public class Inspection {
         numberOfDigits = Integer.parseInt(row[18].trim());
     }
 
+    @NonNull
+    public String toString() {
+        StringJoiner joiner = new StringJoiner("|");
+        joiner.add(String.valueOf(id));
+        joiner.add(getAddress());
+        joiner.add(getApartment());
+        joiner.add(fullName);
+        joiner.add(meterSerialId);
+        joiner.add(meterModel);
+        joiner.add(localDateToString(paymentDate));
+        joiner.add(debt.toString());
+        joiner.add(localDateToString(lastInspectionDate));
+        joiner.add(value.toString());
+        String isAntimagnetStr = isAntimagnet ? "да" : "нет";
+        joiner.add(isAntimagnetStr);
+        String isDisabledStr = isDisabled ? "да" : "нет";
+        joiner.add(isDisabledStr);
+        //TODO: Add Longtitude and latitude
+        String noteStr = note == null ? "" : note;
+        return joiner + noteStr + "\r\n";
+    }
+
     private LocalDate stringToLocalDate(String s) {
         return LocalDate.parse(s, DateTimeFormatter.ofPattern("dd.MM.yy"));
+    }
+
+    private String localDateToString(LocalDate date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yy");
+        return formatter.format(date);
     }
 
     private String findBuildingLetter(String s) {
@@ -114,8 +141,7 @@ public class Inspection {
     }
 
     @NonNull
-    @Override
-    public String toString() {
+    public String getAddress() {
         StringBuilder result = new StringBuilder();
         Locale locale = new Locale("ru", "RU");
         result.append(String.format(locale, "%s, дом.%d", street, buildingNumber));
@@ -125,10 +151,14 @@ public class Inspection {
             result.append(String.format(locale, " кор.%d", blockNumber));
         if(blockLetter != null)
             result.append(String.format(locale, "-%s", blockLetter));
-        result.append(String.format(locale, ", %d", apartmentNumber));
-        if(apartmentLetter != null)
-            result.append(apartmentLetter);
         return result.toString();
+    }
+
+    public String getApartment() {
+        String result = apartmentNumber.toString();
+        if(apartmentLetter != null)
+            result += apartmentLetter;
+        return result;
     }
 
 }

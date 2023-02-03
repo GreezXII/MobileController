@@ -1,5 +1,7 @@
 package com.greezxii.mobilecontroller.viewmodel;
 
+import android.view.View;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import com.greezxii.mobilecontroller.repository.DataRepository;
@@ -49,4 +51,7 @@ public class MainViewModel extends ViewModel {
         repository.updateInspection(selectedInspection.getValue());
     }
 
+    public void putDataToTFTP() {
+        repository.putInspectionsToTFTP();
+    }
 }

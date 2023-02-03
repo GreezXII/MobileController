@@ -19,7 +19,7 @@
             android:name=".InfoActivity"
             android:exported="false"
             android:screenOrientation="landscape"
-            android:windowSoftInputMode="stateHidden">
+            android:windowSoftInputMode="">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />

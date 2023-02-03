@@ -9,12 +9,20 @@ import com.greezxii.mobilecontroller.database.MobileControllerDatabase;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.net.tftp.TFTP;
 import org.apache.commons.net.tftp.TFTPClient;
+
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.SocketException;
 import java.nio.charset.Charset;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Formatter;
 import java.util.List;
+import java.util.Locale;
 
 public class DataRepository {
 
@@ -58,7 +66,49 @@ public class DataRepository {
         return worker.result;
     }
 
-    public void makeInspectionsCacheFromTFTP() {
+    public void putInspectionsToTFTP() {
+        class Worker extends Thread {
+            @Override
+            public void run() {
+                super.run();
+                try {
+                    // Create string content of file
+                    List<Inspection> inspections = getAllInspections();
+                    StringBuilder builder = new StringBuilder();
+                    for (int i = 0; i < inspections.size(); i++) {
+                        Inspection inspection = inspections.get(i);
+                        if (inspection.value != null)
+                            builder.append(inspection);
+                    }
+                    // Create byte stream
+                    byte[] inputStreamContent = builder.toString().getBytes("Cp1251");
+                    ByteArrayInputStream inputStream = new ByteArrayInputStream(inputStreamContent);
+
+                    // Create filename
+                    LocalDate currentDate = LocalDate.now();
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd", new Locale("ru"));
+                    String fileName = formatter.format(currentDate) + ".db";
+
+                    // Send data to TFTP
+                    TFTPClient client = new TFTPClient();
+                    client.open();
+                    client.sendFile(fileName, TFTP.BINARY_MODE, inputStream, TFTP_SERVER_IP);
+                    client.close();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        }
+        Worker worker = new Worker();
+        worker.start();
+        try {
+            worker.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void getInspectionsFromTFTP() {
         class Worker extends Thread {
             @Override
             public void run() {

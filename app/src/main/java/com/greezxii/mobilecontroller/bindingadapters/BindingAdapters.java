@@ -54,6 +54,7 @@ public class BindingAdapters {
     public static String nullableIntegerToString(Integer value) {
         return value == null ? "" : value.toString();
     }
+
     public static Integer stringToNullableInteger(String value) {
         return value.equals("") ? null : Integer.parseInt(value);
     }

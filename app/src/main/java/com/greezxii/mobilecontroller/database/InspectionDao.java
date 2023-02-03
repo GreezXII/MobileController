@@ -19,7 +19,10 @@ public interface InspectionDao {
     @Update
     void updateInspection(Inspection inspection);
 
-    @Query("SELECT * FROM Inspection")
+    @Query("SELECT * FROM Inspection ORDER BY " +
+            "street, buildingNumber, buildingLetter, " +
+            "blockNumber, blockLetter, " +
+            "apartmentNumber, apartmentLetter")
     List<Inspection> getAllInspections();
 
     @Query("SELECT * FROM Inspection WHERE id = :id")

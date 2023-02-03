@@ -5,23 +5,24 @@
     tools:context=".MainActivity">
     <item
         android:id="@+id/action_search"
-        app:showAsAction="ifRoom"
-        android:title="@string/search">
+        android:title="@string/search"
+        app:showAsAction="ifRoom">
     </item>
     <item
         android:id="@+id/action_download"
-        app:showAsAction="never"
-        android:title="@string/download">
+        android:title="@string/download"
+        app:showAsAction="never">
     </item>
     <item
         android:id="@+id/action_upload"
-        app:showAsAction="never"
-        android:title="@string/upload">
+        android:title="@string/upload"
+        android:onClick="saveToTFTP"
+        app:showAsAction="never">
     </item>
     <item
-        app:showAsAction="never"
         android:id="@+id/action_settings"
         android:title="@string/settings"
-        android:onClick="openSettings">
+        android:onClick="openSettings"
+        app:showAsAction="never">
     </item>
 </menu>

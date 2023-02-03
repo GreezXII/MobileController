@@ -404,6 +404,7 @@
             android:hint="@string/Value"
             android:autofillHints="@string/Value"
             android:inputType="numberDecimal"
+            android:text="@={BindingAdapters.nullableIntegerToString(vm.selectedInspection.value)}"
             app:layout_constraintStart_toEndOf="@+id/recycler_addresses"
             app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
