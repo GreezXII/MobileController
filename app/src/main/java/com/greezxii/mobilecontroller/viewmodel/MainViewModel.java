@@ -51,7 +51,7 @@ public class MainViewModel extends ViewModel {
         repository.updateInspection(selectedInspection.getValue());
     }
 
-    public void putDataToTFTP() {
-        repository.putInspectionsToTFTP();
+    public void saveToTFTP() {
+        repository.putInspectionsToTFTPAsync();
     }
 }

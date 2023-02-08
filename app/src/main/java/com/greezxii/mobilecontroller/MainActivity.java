@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.greezxii.mobilecontroller.database.Inspection;
 import com.greezxii.mobilecontroller.databinding.ActivityMainBinding;
@@ -22,6 +23,7 @@ import com.greezxii.mobilecontroller.repository.DataRepository;
 import com.greezxii.mobilecontroller.viewmodel.MainViewModel;
 
 import java.util.List;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
     MainViewModel vm;
@@ -53,9 +55,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void saveToTFTP(MenuItem item) {
-        vm.putDataToTFTP();
-        Snackbar snackbar = Snackbar.make(this, findViewById(R.id.button_openInfo), "OK", Snackbar.LENGTH_SHORT);
-        snackbar.show();
+        vm.saveToTFTP();
     }
 
     private void initViewModel() {
@@ -90,5 +90,11 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, InfoActivity.class);
             startActivity(intent);
         });
+    }
+
+    public void showBar(CharSequence msg) {
+        Snackbar snackbar = Snackbar.make(this, findViewById(R.id.button_openInfo),
+                msg, Snackbar.LENGTH_SHORT);
+        snackbar.show();
     }
 }
