@@ -65,7 +65,7 @@
             android:textColor="#000000"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:text="@{String.valueOf(vm.selectedInspection.id)}"
+            app:contract="@{vm.selectedInspection.id}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.19"
             app:layout_constraintStart_toEndOf="@+id/textView_label_contract"
@@ -391,6 +391,7 @@
             android:inputType="text"
             android:text="@={vm.selectedInspection.note}"
             android:importantForAutofill="no"
+            android:enabled="@{vm.selectedInspection != null}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/editText_value"
             app:layout_constraintTop_toBottomOf="@+id/editText_value" />
@@ -405,6 +406,7 @@
             android:autofillHints="@string/Value"
             android:inputType="numberDecimal"
             android:text="@={BindingAdapters.nullableIntegerToString(vm.selectedInspection.value)}"
+            android:enabled="@{vm.selectedInspection != null}"
             app:layout_constraintStart_toEndOf="@+id/recycler_addresses"
             app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 

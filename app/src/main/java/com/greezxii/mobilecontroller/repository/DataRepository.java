@@ -8,7 +8,6 @@ import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.common.util.concurrent.MoreExecutors;
 import com.greezxii.mobilecontroller.database.Inspection;
 import com.greezxii.mobilecontroller.database.InspectionDao;
 import com.greezxii.mobilecontroller.database.MobileControllerDatabase;
@@ -27,7 +26,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.Executors;
 
 public class DataRepository {
 
@@ -43,37 +41,21 @@ public class DataRepository {
         db = MobileControllerDatabase.getDatabase(this.context);
     }
 
-    private String getFileContentFromTFTP() {
-        class Worker extends Thread {
-            String result = null;
-            @Override
-            public void run() {
-                super.run();
-                try {
-                    TFTPClient client = new TFTPClient();
-                    client.open();
-                    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                    int bytesRead = client.receiveFile(INPUT_FILE_NAME, TFTP.BINARY_MODE, outputStream, TFTP_SERVER_IP);
-                    if (bytesRead > 0) {
-                        result = outputStream.toString("Cp1251");
-                    }
-                    client.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
+    private List<Inspection> parseInspections(String tftpFileContent) {
+        // Parse Inspections
+        String[] lines = tftpFileContent.split("\r\n");
+        ArrayList<Inspection> inspections = new ArrayList<>();
+        for (String l : lines) {
+            if (l.length() < 1)
+                continue;
+            Inspection inspection = new Inspection();
+            inspection.fromString(l);
+            inspections.add(inspection);
         }
-        Worker worker = new Worker();
-        worker.start();
-        try {
-            worker.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return worker.result;
+        return inspections;
     }
 
-    public void putInspectionsToTFTPAsync(FutureCallback<Void> callback) {
+    public void saveInspectionsToTFTPAsync(FutureCallback<Void> callback) {
         ListenableFuture<Void> future = executorService.submit(() -> {
             // Create string content of file
             List<Inspection> inspections = getAllInspections();
@@ -98,27 +80,32 @@ public class DataRepository {
             client.close();
             return null;
         });
-        Futures.addCallback(future, callback, executorService);
+        Futures.addCallback(future, callback, ContextCompat.getMainExecutor(context));
     }
 
-    public void getInspectionsFromTFTP() {
-        class Worker extends Thread {
-            @Override
-            public void run() {
-                super.run();
-                String tftpFileContent = getFileContentFromTFTP();
-                ArrayList<Inspection> inspections = parseInspections(tftpFileContent);
-                InspectionDao inspectionDao = db.inspectionDao();
-                inspectionDao.insertAll(inspections.toArray(new Inspection[0]));
+    public void loadInspectionsFromTFTPAsync(FutureCallback<List<Inspection>> callback) {
+        ListenableFuture<List<Inspection>> future = executorService.submit(() -> {
+            // Read file content from TFTP
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            TFTPClient client = new TFTPClient();
+            client.open();
+            int bytesRead = client.receiveFile(INPUT_FILE_NAME, TFTP.BINARY_MODE, outputStream, TFTP_SERVER_IP);
+            String tftpFileContent;
+            if (bytesRead > 0) {
+                tftpFileContent = outputStream.toString("Cp1251");
             }
-        }
-        Worker worker = new Worker();
-        worker.start();
-        try {
-            worker.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+            else {
+                throw new Exception("Не удалось загрузить файл из TFTP сервера.");
+            }
+            client.close();
+
+            List<Inspection> inspections = parseInspections(tftpFileContent);
+            InspectionDao inspectionDao = db.inspectionDao();
+            inspectionDao.deleteAll();
+            inspectionDao.insertAll(inspections.toArray(new Inspection[0]));
+            return inspections;
+        });
+        Futures.addCallback(future, callback, ContextCompat.getMainExecutor(context));
     }
 
     public void makeInspectionsCacheFromMock() {
@@ -169,19 +156,7 @@ public class DataRepository {
         return worker.result;
     }
 
-    private ArrayList<Inspection> parseInspections(String fileContent) {
-        String[] lines = fileContent.split("\r\n");
 
-        ArrayList<Inspection> entities = new ArrayList<>();
-        for (String l : lines) {
-            if (l.length() < 1)
-                continue;
-            Inspection inspection = new Inspection();
-            inspection.fromString(l);
-            entities.add(inspection);
-        }
-        return entities;
-    }
 
     public void updateInspection(Inspection inspection) {
         class Worker extends Thread {

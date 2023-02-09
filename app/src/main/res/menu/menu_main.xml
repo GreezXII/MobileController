@@ -11,6 +11,7 @@
     <item
         android:id="@+id/action_download"
         android:title="@string/download"
+        android:onClick="loadFromTFTP"
         app:showAsAction="never">
     </item>
     <item

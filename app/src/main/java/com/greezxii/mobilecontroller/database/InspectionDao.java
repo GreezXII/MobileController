@@ -3,6 +3,7 @@ package com.greezxii.mobilecontroller.database;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
@@ -10,7 +11,7 @@ import java.util.List;
 
 @Dao
 public interface InspectionDao {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(Inspection... inspections);
 
     @Delete
@@ -24,9 +25,6 @@ public interface InspectionDao {
             "blockNumber, blockLetter, " +
             "apartmentNumber, apartmentLetter")
     List<Inspection> getAllInspections();
-
-    @Query("SELECT * FROM Inspection WHERE id = :id")
-    Inspection getInspectionById(int id);
 
     @Query("SELECT Count(*) FROM Inspection WHERE value >= 0")
     Integer getPerformedInspectionsCount();

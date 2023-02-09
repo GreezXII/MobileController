@@ -13,25 +13,43 @@ import java.util.Locale;
 
 public class BindingAdapters {
 
+    @BindingAdapter("contract")
+    public static void setContract(TextView view, int value) {
+        if (value == 0)
+            view.setText("");
+        else
+            view.setText(String.format(new Locale("ru"), "%d", value));
+    }
+
     @BindingAdapter("date")
     public static void setDate(TextView view, LocalDate date) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy", new Locale("ru"));
-        view.setText(formatter.format(date));
+        if (date == null)
+            view.setText("");
+        else {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy", new Locale("ru"));
+            view.setText(formatter.format(date));
+        }
     }
 
     @BindingAdapter("meter")
     public static void setMeter(TextView view, Inspection inspection) {
-        String result = String.format(new Locale("ru"),
-                "%s  № %s [%d]",
-                inspection.meterModel,
-                inspection.meterSerialId,
-                inspection.numberOfDigits);
-        view.setText(result);
+        if (inspection == null)
+            view.setText("");
+        else {
+            String result = String.format(new Locale("ru"),
+                    "%s  № %s [%d]",
+                    inspection.meterModel,
+                    inspection.meterSerialId,
+                    inspection.numberOfDigits);
+            view.setText(result);
+        }
     }
 
     @BindingAdapter("booleanValue")
-    public static void setBoolean(TextView view, boolean value) {
-        if (value)
+    public static void setBoolean(TextView view, Boolean value) {
+        if (value == null)
+            view.setText("");
+        else if (value)
             view.setText("да");
         else
             view.setText("нет");
@@ -39,6 +57,10 @@ public class BindingAdapters {
 
     @BindingAdapter("coloredDecimalValue")
     public static void setColored(TextView view, BigDecimal value) {
+        if (value == null) {
+            view.setText("");
+            return;
+        }
         BigDecimal zero = new BigDecimal(0);
         if (value.compareTo(zero) < 0)
             view.setTextColor(Color.RED);

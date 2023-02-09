@@ -19,8 +19,6 @@ import java.util.regex.Pattern;
 @Entity
 @TypeConverters({LocalDateConverter.class, BigDecimalConverter.class})
 public class Inspection {
-    // Ссылочный тип Integer используется для полей, которые
-    // могут принимать целочисленные значения и null
     @PrimaryKey
     public int id;
     public String street;
@@ -36,8 +34,8 @@ public class Inspection {
     public LocalDate paymentDate;
     public BigDecimal debt;
     public LocalDate lastInspectionDate;
-    public boolean isAntimagnet;
-    public boolean isDisabled;
+    public Boolean isAntimagnet;
+    public Boolean isDisabled;
     public BigDecimal debtByActs;
     public String contacts;
     public LocalDate installationDate;
@@ -46,8 +44,6 @@ public class Inspection {
     public String info;
     public String note;
     public Integer value;
-    // Поле для отслеживания изменений, true - пользователь внёс изменения, иначе false.
-    // Не записывается в базу данных
 
     public void fromString(@NonNull String s) {
         String[] row = s.split("[|]");

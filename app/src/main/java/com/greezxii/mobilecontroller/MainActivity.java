@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
@@ -36,35 +37,12 @@ public class MainActivity extends AppCompatActivity {
         initViewModel();
         initButtons();
         initRecycler(viewModel.inspections);
-
-        //vm.deleteInspections();
-    }
-
-    @Override
-    protected void onPause() {
-        viewModel.updateSelectedInspection();
-        super.onPause();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    public void openSettings(MenuItem Item) {
-        Intent intent = new Intent(this, SettingsActivity.class);
-        this.startActivity(intent);
-    }
-
-    public void saveToTFTP(MenuItem item) {
-        viewModel.saveToTFTP();
     }
 
     private void initViewModel() {
         ListeningExecutorService executorService = MoreExecutors.listeningDecorator(Executors.newSingleThreadExecutor());
         DataRepository dataRepository = new DataRepository(this, executorService);
-        viewModel = new MainViewModel(this, dataRepository);
+        viewModel = new MainViewModel(dataRepository, createAlertDialog());
         ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         binding.setLifecycleOwner(this);
         binding.setVm(viewModel);
@@ -93,6 +71,38 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, InfoActivity.class);
             startActivity(intent);
         });
+    }
+
+    private AlertDialog createAlertDialog() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setCancelable(false)
+                .setNeutralButton("Закрыть", (dialog, which) -> dialog.cancel());
+        return alertDialogBuilder.create();
+    }
+
+    @Override
+    protected void onPause() {
+        viewModel.updateSelectedInspection();
+        super.onPause();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    public void openSettings(MenuItem Item) {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        this.startActivity(intent);
+    }
+
+    public void saveToTFTP(MenuItem item) {
+        viewModel.saveToTFTP();
+    }
+
+    public void loadFromTFTP(MenuItem item) {
+        viewModel.loadFromTFTP();
     }
 
     public void showBar(CharSequence msg) {

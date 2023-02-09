@@ -1,33 +1,36 @@
 package com.greezxii.mobilecontroller.viewmodel;
 
-import android.view.View;
-
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.google.common.util.concurrent.FutureCallback;
-import com.greezxii.mobilecontroller.MainActivity;
 import com.greezxii.mobilecontroller.repository.DataRepository;
 import com.greezxii.mobilecontroller.database.Inspection;
-import com.greezxii.mobilecontroller.repository.QueryResult;
 
 import java.util.List;
 
 public class MainViewModel extends ViewModel {
 
-    private MainActivity activity;
+    private AlertDialog alertDialog;
     private final DataRepository repository;
     public List<Inspection> inspections;
     public MutableLiveData<Inspection> selectedInspection;
     public MutableLiveData<Integer> performedInspectionsCount;
 
-    public MainViewModel(MainActivity activity, DataRepository repository) {
-        this.activity = activity;
+    public MainViewModel(DataRepository repository, AlertDialog alertDialog) {
         this.repository = repository;
+        this.alertDialog = alertDialog;
         getInspections();
         performedInspectionsCount = new MutableLiveData<>();
         updatePerformedInspectionsCount();
+    }
+
+    private void showMessageBox(String title, String message) {
+        alertDialog.setTitle(title);
+        alertDialog.setMessage(message);
+        alertDialog.show();
     }
 
     private void updatePerformedInspectionsCount() {
@@ -37,11 +40,16 @@ public class MainViewModel extends ViewModel {
 
     public List<Inspection> getInspections() {
         if (inspections == null) {
-            repository.makeInspectionsCacheFromMock();
+            //repository.makeInspectionsCacheFromMock();
             inspections = repository.getAllInspections();
         }
-        selectedInspection = new MutableLiveData<>(inspections.get(0));
+        if (!inspections.isEmpty())
+            selectedInspection = new MutableLiveData<>(inspections.get(0));
         return inspections;
+    }
+
+    public void updateSelectedInspection() {
+        repository.updateInspection(selectedInspection.getValue());
     }
 
     public void deleteInspections() {
@@ -55,23 +63,34 @@ public class MainViewModel extends ViewModel {
         selectedInspection.setValue(selected);
     }
 
-    public void updateSelectedInspection() {
-        repository.updateInspection(selectedInspection.getValue());
-    }
-
     public void saveToTFTP() {
         FutureCallback<Void> callback = new FutureCallback<Void>() {
             @Override
             public void onSuccess(Void result) {
-                String msg = "Выполнено!";
-                activity.showBar(msg);
+                showMessageBox("Уведомление", "Загрузка данных выполнена успешно.");
             }
 
             @Override
             public void onFailure(@NonNull Throwable t) {
-                activity.showBar(t.getMessage());
+                showMessageBox("Произошла ошибка", t.getMessage());
             }
         };
-        repository.putInspectionsToTFTPAsync(callback);
+        repository.saveInspectionsToTFTPAsync(callback);
+    }
+
+    public void loadFromTFTP() {
+        FutureCallback<List<Inspection>> callback = new FutureCallback<List<Inspection>>() {
+            @Override
+            public void onSuccess(List<Inspection> result) {
+                inspections = result;
+                showMessageBox("Уведомление", "Загрузка данных выполнена успешно.");
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                showMessageBox("Произошла ошибка", t.getMessage());
+            }
+        };
+        repository.loadInspectionsFromTFTPAsync(callback);
     }
 }
