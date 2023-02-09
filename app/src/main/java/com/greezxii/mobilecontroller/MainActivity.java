@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
@@ -26,7 +27,8 @@ import java.util.List;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
-    MainViewModel vm;
+
+    public MainViewModel vm;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    public void openSettings(MenuItem item) {
+    public void openSettings(MenuItem Item) {
         Intent intent = new Intent(this, SettingsActivity.class);
         this.startActivity(intent);
     }
@@ -60,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initViewModel() {
         DataRepository repository = new DataRepository(this);
-        vm = new MainViewModel(repository);
+        vm = new MainViewModel(this, repository);
         ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         binding.setLifecycleOwner(this);
         binding.setVm(vm);
@@ -83,7 +85,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void initButtons() {
         Button button;
-
         // Open info button
         button = findViewById(R.id.button_openInfo);
         button.setOnClickListener(view -> {

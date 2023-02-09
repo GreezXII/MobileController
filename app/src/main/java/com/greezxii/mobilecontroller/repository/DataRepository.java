@@ -1,8 +1,5 @@
 package com.greezxii.mobilecontroller.repository;
 
-import android.content.Context;
-
-import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
 import com.google.common.util.concurrent.FutureCallback;
@@ -34,7 +31,7 @@ import java.util.concurrent.Executors;
 public class DataRepository {
 
     MainActivity _context;
-    public String TFTP_SERVER_IP = "192.168.43.93";
+    public String TFTP_SERVER_IP = "192.168.1.158";
     public String INPUT_FILE_NAME = "input.db";
     public MobileControllerDatabase db;
 
@@ -73,8 +70,9 @@ public class DataRepository {
         return worker.result;
     }
 
-    public QueryResult saveInspectionsToTFTP() {
-        try {
+    public void putInspectionsToTFTPAsync(FutureCallback<Void> callback) {
+        ListeningExecutorService service = MoreExecutors.listeningDecorator(Executors.newSingleThreadExecutor());
+        ListenableFuture<Void> future = service.submit(() -> {
             // Create string content of file
             List<Inspection> inspections = getAllInspections();
             StringBuilder builder = new StringBuilder();
@@ -96,32 +94,9 @@ public class DataRepository {
             client.open();
             client.sendFile(fileName, TFTP.BINARY_MODE, inputStream, TFTP_SERVER_IP);
             client.close();
-            return new QueryResult.Success();
-        } catch (Exception e) {
-            return new QueryResult.Error(e);
-        }
-
-    }
-
-    public void putInspectionsToTFTPAsync() {
-        ListeningExecutorService service = MoreExecutors.listeningDecorator(Executors.newSingleThreadExecutor());
-        ListenableFuture<QueryResult> future = service.submit(this::saveInspectionsToTFTP);
-        Futures.addCallback(
-                future,
-                new FutureCallback<QueryResult>() {
-                    @Override
-                    public void onSuccess(QueryResult result) {
-                        String msg = "Выполнено!";
-                        _context.showBar(msg);
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Throwable t) {
-                        _context.showBar(t.getMessage());
-                    }
-                },
-                ContextCompat.getMainExecutor(_context)
-        );
+            return null;
+        });
+        Futures.addCallback(future, callback, ContextCompat.getMainExecutor(_context));
     }
 
     public void getInspectionsFromTFTP() {

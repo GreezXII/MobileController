@@ -2,20 +2,28 @@ package com.greezxii.mobilecontroller.viewmodel;
 
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+
+import com.google.common.util.concurrent.FutureCallback;
+import com.greezxii.mobilecontroller.MainActivity;
 import com.greezxii.mobilecontroller.repository.DataRepository;
 import com.greezxii.mobilecontroller.database.Inspection;
+import com.greezxii.mobilecontroller.repository.QueryResult;
+
 import java.util.List;
 
 public class MainViewModel extends ViewModel {
 
+    private MainActivity activity;
     private final DataRepository repository;
     public List<Inspection> inspections;
     public MutableLiveData<Inspection> selectedInspection;
     public MutableLiveData<Integer> performedInspectionsCount;
 
-    public MainViewModel(DataRepository repository) {
+    public MainViewModel(MainActivity activity, DataRepository repository) {
+        this.activity = activity;
         this.repository = repository;
         getInspections();
         performedInspectionsCount = new MutableLiveData<>();
@@ -52,6 +60,18 @@ public class MainViewModel extends ViewModel {
     }
 
     public void saveToTFTP() {
-        repository.putInspectionsToTFTPAsync();
+        FutureCallback<Void> callback = new FutureCallback<Void>() {
+            @Override
+            public void onSuccess(Void result) {
+                String msg = "Выполнено!";
+                activity.showBar(msg);
+            }
+
+            @Override
+            public void onFailure(@NonNull Throwable t) {
+                activity.showBar(t.getMessage());
+            }
+        };
+        repository.putInspectionsToTFTPAsync(callback);
     }
 }
