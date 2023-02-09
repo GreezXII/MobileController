@@ -1,5 +1,7 @@
 package com.greezxii.mobilecontroller.repository;
 
+import android.content.Context;
+
 import androidx.core.content.ContextCompat;
 
 import com.google.common.util.concurrent.FutureCallback;
@@ -7,7 +9,6 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
-import com.greezxii.mobilecontroller.MainActivity;
 import com.greezxii.mobilecontroller.database.Inspection;
 import com.greezxii.mobilecontroller.database.InspectionDao;
 import com.greezxii.mobilecontroller.database.MobileControllerDatabase;
@@ -30,14 +31,16 @@ import java.util.concurrent.Executors;
 
 public class DataRepository {
 
-    MainActivity _context;
+    ListeningExecutorService executorService;
+    Context context;
     public String TFTP_SERVER_IP = "192.168.1.158";
     public String INPUT_FILE_NAME = "input.db";
     public MobileControllerDatabase db;
 
-    public DataRepository(MainActivity context) {
-        _context = context;
-        db = MobileControllerDatabase.getDatabase(_context);
+    public DataRepository(Context context, ListeningExecutorService executorService) {
+        this.context = context;
+        this.executorService = executorService;
+        db = MobileControllerDatabase.getDatabase(this.context);
     }
 
     private String getFileContentFromTFTP() {
@@ -71,8 +74,7 @@ public class DataRepository {
     }
 
     public void putInspectionsToTFTPAsync(FutureCallback<Void> callback) {
-        ListeningExecutorService service = MoreExecutors.listeningDecorator(Executors.newSingleThreadExecutor());
-        ListenableFuture<Void> future = service.submit(() -> {
+        ListenableFuture<Void> future = executorService.submit(() -> {
             // Create string content of file
             List<Inspection> inspections = getAllInspections();
             StringBuilder builder = new StringBuilder();
@@ -96,7 +98,7 @@ public class DataRepository {
             client.close();
             return null;
         });
-        Futures.addCallback(future, callback, ContextCompat.getMainExecutor(_context));
+        Futures.addCallback(future, callback, executorService);
     }
 
     public void getInspectionsFromTFTP() {
@@ -128,7 +130,7 @@ public class DataRepository {
                 List<Inspection> inspections = inspectionDao.getAllInspections();
                 if (!inspections.isEmpty())
                     return;
-                try(InputStream inputStream = _context.getAssets().open("input.db")) {
+                try(InputStream inputStream = context.getAssets().open("input.db")) {
                     String fileContent = IOUtils.toString(inputStream, Charset.defaultCharset());
                     inspections = parseInspections(fileContent);
                     inspectionDao.insertAll(inspections.toArray(new Inspection[0]));

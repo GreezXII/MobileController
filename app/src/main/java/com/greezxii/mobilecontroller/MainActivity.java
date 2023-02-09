@@ -7,7 +7,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
@@ -15,8 +14,9 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.common.util.concurrent.MoreExecutors;
 import com.greezxii.mobilecontroller.database.Inspection;
 import com.greezxii.mobilecontroller.databinding.ActivityMainBinding;
 import com.greezxii.mobilecontroller.recycler.InspectionsRecyclerAdapter;
@@ -24,24 +24,25 @@ import com.greezxii.mobilecontroller.repository.DataRepository;
 import com.greezxii.mobilecontroller.viewmodel.MainViewModel;
 
 import java.util.List;
-import java.util.Objects;
+import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity {
 
-    public MainViewModel vm;
+    public MainViewModel viewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initViewModel();
         initButtons();
-        initRecycler(vm.inspections);
+        initRecycler(viewModel.inspections);
 
         //vm.deleteInspections();
     }
 
     @Override
     protected void onPause() {
-        vm.updateSelectedInspection();
+        viewModel.updateSelectedInspection();
         super.onPause();
     }
 
@@ -57,22 +58,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void saveToTFTP(MenuItem item) {
-        vm.saveToTFTP();
+        viewModel.saveToTFTP();
     }
 
     private void initViewModel() {
-        DataRepository repository = new DataRepository(this);
-        vm = new MainViewModel(this, repository);
+        ListeningExecutorService executorService = MoreExecutors.listeningDecorator(Executors.newSingleThreadExecutor());
+        DataRepository dataRepository = new DataRepository(this, executorService);
+        viewModel = new MainViewModel(this, dataRepository);
         ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         binding.setLifecycleOwner(this);
-        binding.setVm(vm);
+        binding.setVm(viewModel);
     }
 
     private void initRecycler(List<Inspection> data) {
         RecyclerView recyclerView = findViewById(R.id.recycler_addresses);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        InspectionsRecyclerAdapter.OnInspectionClickListener clickListener = (position) -> vm.onSelect(position);
+        InspectionsRecyclerAdapter.OnInspectionClickListener clickListener = (position) -> viewModel.onSelect(position);
         InspectionsRecyclerAdapter adapter = new InspectionsRecyclerAdapter(getApplicationContext(), data, clickListener);
         recyclerView.setAdapter(adapter);
 
