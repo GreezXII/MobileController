@@ -11,6 +11,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         ListeningExecutorService executorService = MoreExecutors.listeningDecorator(Executors.newSingleThreadExecutor());
         DataRepository dataRepository = new DataRepository(this, executorService);
         viewModel = new MainViewModel(dataRepository, createAlertDialog());
+
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         binding.setLifecycleOwner(this);
         binding.setVm(viewModel);
@@ -62,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
         binding.recyclerInspections.setLayoutManager(new LinearLayoutManager(this));
         binding.recyclerInspections.setAdapter(adapter);
         binding.recyclerInspections.addItemDecoration(dividerItemDecoration);
+
+        viewModel.liveInspections.observe(this, adapter::updateInspections);
     }
 
     private void initButtons() {

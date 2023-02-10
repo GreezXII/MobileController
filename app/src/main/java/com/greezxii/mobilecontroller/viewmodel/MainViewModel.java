@@ -15,11 +15,14 @@ public class MainViewModel extends ViewModel {
 
     private final AlertDialog alertDialog;
     private final DataRepository repository;
+    public MutableLiveData<List<Inspection>> liveInspections;
     public List<Inspection> inspections;
     public MutableLiveData<Inspection> selectedInspection;
     public MutableLiveData<Integer> performedInspectionsCount;
 
     public MainViewModel(DataRepository repository, AlertDialog alertDialog) {
+        this.liveInspections = new MutableLiveData<>();
+        selectedInspection = new MutableLiveData<>();
         this.repository = repository;
         this.alertDialog = alertDialog;
         loadInspectionsFromDB();
@@ -38,14 +41,12 @@ public class MainViewModel extends ViewModel {
         performedInspectionsCount.setValue(value);
     }
 
-    public List<Inspection> loadInspectionsFromDB() {
-        if (inspections == null) {
-            //repository.makeInspectionsCacheFromMock();
-            inspections = repository.getAllInspections();
+    public void loadInspectionsFromDB() {
+        inspections = repository.getAllInspections();
+        if (!inspections.isEmpty()) {
+            liveInspections.setValue(inspections);
+            selectedInspection.setValue(inspections.get(0));
         }
-        if (!inspections.isEmpty())
-            selectedInspection = new MutableLiveData<>(inspections.get(0));
-        return inspections;
     }
 
     public void updateSelectedInspection() {
@@ -82,7 +83,7 @@ public class MainViewModel extends ViewModel {
         FutureCallback<List<Inspection>> callback = new FutureCallback<List<Inspection>>() {
             @Override
             public void onSuccess(List<Inspection> result) {
-                inspections = result;
+                loadInspectionsFromDB();
                 showMessageBox("Уведомление", "Загрузка данных выполнена успешно.");
             }
 
@@ -92,7 +93,5 @@ public class MainViewModel extends ViewModel {
             }
         };
         repository.loadInspectionsFromTFTPAsync(callback);
-        inspections = repository.getAllInspections();
-        loadInspectionsFromDB();
     }
 }

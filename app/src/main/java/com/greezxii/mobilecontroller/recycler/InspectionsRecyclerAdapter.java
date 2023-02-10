@@ -47,8 +47,13 @@ public class InspectionsRecyclerAdapter extends RecyclerView.Adapter<Inspections
         return list.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        private RecyclerViewItemBinding binding;
+    public void updateInspections(List<Inspection> inspections) {
+        this.list = inspections;
+        notifyDataSetChanged();
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        private final RecyclerViewItemBinding binding;
 
         public ViewHolder(@NonNull RecyclerViewItemBinding binding) {
             super(binding.getRoot());
