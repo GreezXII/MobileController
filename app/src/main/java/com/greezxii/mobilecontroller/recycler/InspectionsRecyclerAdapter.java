@@ -2,45 +2,61 @@ package com.greezxii.mobilecontroller.recycler;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import com.greezxii.mobilecontroller.R;
 import com.greezxii.mobilecontroller.database.Inspection;
+import com.greezxii.mobilecontroller.databinding.RecyclerViewItemBinding;
+
 import java.util.List;
+import java.util.Locale;
 
-public class InspectionsRecyclerAdapter extends RecyclerView.Adapter<ItemViewHolder> {
-    Context context;
-    List<Inspection> items;
+public class InspectionsRecyclerAdapter extends RecyclerView.Adapter<InspectionsRecyclerAdapter.ViewHolder> {
 
-    public InspectionsRecyclerAdapter(Context context, List<Inspection> items, OnInspectionClickListener onClickListener) {
-        this.context = context;
-        this.items = items;
+    private List<Inspection> list;
+    private final OnInspectionClickListener onInspectionClick;
+
+    public InspectionsRecyclerAdapter(List<Inspection> list, OnInspectionClickListener onClickListener) {
+        this.list = list;
         this.onInspectionClick = onClickListener;
     }
 
-    public interface OnInspectionClickListener {
-        void onInspectionClick(int position);
-    }
-
-    private final OnInspectionClickListener onInspectionClick;
-
     @NonNull
     @Override
-    public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ItemViewHolder(LayoutInflater.from(context).inflate(R.layout.recycler_view_item_layout, parent, false));
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        RecyclerViewItemBinding binding = DataBindingUtil.inflate(inflater,
+                R.layout.recycler_view_item, parent, false);
+        return new ViewHolder(binding);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
-        Inspection inspection = items.get(position);
-        String fullAddress = inspection.getAddress() + ", " + inspection.getApartment();
-        holder.item_address.setText(fullAddress);
-        holder.itemView.setOnClickListener(view -> onInspectionClick.onInspectionClick(position));
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        Inspection item = list.get(position);
+        String itemString = String.format(new Locale("ru"), "%s, %s",
+                item.getAddress(), item.getApartment());
+        holder.binding.textViewItem.setText(itemString);
+        holder.binding.textViewItem.setOnClickListener(view -> onInspectionClick.onInspectionClick(position));
     }
 
     @Override
     public int getItemCount() {
-        return items.size();
+        return list.size();
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        private RecyclerViewItemBinding binding;
+
+        public ViewHolder(@NonNull RecyclerViewItemBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
+        }
+    }
+
+    public interface OnInspectionClickListener {
+        void onInspectionClick(int position);
     }
 }

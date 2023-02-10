@@ -29,6 +29,7 @@ import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity {
 
+    private ActivityMainBinding binding;
     public MainViewModel viewModel;
 
     @Override
@@ -43,24 +44,24 @@ public class MainActivity extends AppCompatActivity {
         ListeningExecutorService executorService = MoreExecutors.listeningDecorator(Executors.newSingleThreadExecutor());
         DataRepository dataRepository = new DataRepository(this, executorService);
         viewModel = new MainViewModel(dataRepository, createAlertDialog());
-        ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         binding.setLifecycleOwner(this);
         binding.setVm(viewModel);
     }
 
     private void initRecycler(List<Inspection> data) {
-        RecyclerView recyclerView = findViewById(R.id.recycler_addresses);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
+        // Adapter
         InspectionsRecyclerAdapter.OnInspectionClickListener clickListener = (position) -> viewModel.onSelect(position);
-        InspectionsRecyclerAdapter adapter = new InspectionsRecyclerAdapter(getApplicationContext(), data, clickListener);
-        recyclerView.setAdapter(adapter);
-
+        InspectionsRecyclerAdapter adapter = new InspectionsRecyclerAdapter(viewModel.inspections, clickListener);
+        // Divider
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, RecyclerView.VERTICAL);
         Drawable divider = ResourcesCompat.getDrawable(getResources(), R.drawable.divider_drawable, null);
         if(divider != null)
             dividerItemDecoration.setDrawable(divider);
-        recyclerView.addItemDecoration(dividerItemDecoration);
+        // Binding
+        binding.recyclerInspections.setLayoutManager(new LinearLayoutManager(this));
+        binding.recyclerInspections.setAdapter(adapter);
+        binding.recyclerInspections.addItemDecoration(dividerItemDecoration);
     }
 
     private void initButtons() {

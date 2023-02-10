@@ -13,7 +13,7 @@ import java.util.List;
 
 public class MainViewModel extends ViewModel {
 
-    private AlertDialog alertDialog;
+    private final AlertDialog alertDialog;
     private final DataRepository repository;
     public List<Inspection> inspections;
     public MutableLiveData<Inspection> selectedInspection;
@@ -22,7 +22,7 @@ public class MainViewModel extends ViewModel {
     public MainViewModel(DataRepository repository, AlertDialog alertDialog) {
         this.repository = repository;
         this.alertDialog = alertDialog;
-        getInspections();
+        loadInspectionsFromDB();
         performedInspectionsCount = new MutableLiveData<>();
         updatePerformedInspectionsCount();
     }
@@ -38,7 +38,7 @@ public class MainViewModel extends ViewModel {
         performedInspectionsCount.setValue(value);
     }
 
-    public List<Inspection> getInspections() {
+    public List<Inspection> loadInspectionsFromDB() {
         if (inspections == null) {
             //repository.makeInspectionsCacheFromMock();
             inspections = repository.getAllInspections();
@@ -92,5 +92,7 @@ public class MainViewModel extends ViewModel {
             }
         };
         repository.loadInspectionsFromTFTPAsync(callback);
+        inspections = repository.getAllInspections();
+        loadInspectionsFromDB();
     }
 }
