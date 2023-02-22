@@ -42,6 +42,7 @@ public class MainViewModel extends ViewModel {
     }
 
     public void loadInspectionsFromDB() {
+        repository.makeInspectionsCacheFromMock();
         inspections = repository.getAllInspections();
         if (!inspections.isEmpty()) {
             liveInspections.setValue(inspections);

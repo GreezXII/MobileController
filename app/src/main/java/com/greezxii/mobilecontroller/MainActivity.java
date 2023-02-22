@@ -5,13 +5,13 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,12 +21,17 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.greezxii.mobilecontroller.database.Inspection;
 import com.greezxii.mobilecontroller.databinding.ActivityMainBinding;
-import com.greezxii.mobilecontroller.recycler.InspectionsRecyclerAdapter;
+import com.greezxii.mobilecontroller.recycler.InspectionFlexibleItem;
 import com.greezxii.mobilecontroller.repository.DataRepository;
 import com.greezxii.mobilecontroller.viewmodel.MainViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
+
+import eu.davidea.flexibleadapter.FlexibleAdapter;
+import eu.davidea.flexibleadapter.SelectableAdapter;
+import eu.davidea.flexibleadapter.items.IFlexible;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -52,21 +57,30 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initRecycler(List<Inspection> data) {
-        // Adapter
-        InspectionsRecyclerAdapter.OnInspectionClickListener clickListener = (position) -> viewModel.onSelect(position);
-        InspectionsRecyclerAdapter adapter = new InspectionsRecyclerAdapter(viewModel.inspections, clickListener);
+        List<IFlexible> flexibleList = new ArrayList<>();
+        for (int i = 0; i < data.size(); i++)
+            flexibleList.add(new InspectionFlexibleItem(data.get(i)));
+
+        FlexibleAdapter<IFlexible> adapter = new FlexibleAdapter<>(flexibleList);
+        adapter.setMode(SelectableAdapter.Mode.SINGLE);
+        RecyclerView recycler = findViewById(R.id.recycler_inspections);
+        recycler.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        recycler.setAdapter(adapter);
         // Divider
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, RecyclerView.VERTICAL);
         Drawable divider = ResourcesCompat.getDrawable(getResources(), R.drawable.divider_drawable, null);
         if(divider != null)
             dividerItemDecoration.setDrawable(divider);
-        // Binding
-        binding.recyclerInspections.setLayoutManager(new LinearLayoutManager(this));
-        binding.recyclerInspections.setAdapter(adapter);
-        binding.recyclerInspections.addItemDecoration(dividerItemDecoration);
-
-        viewModel.liveInspections.observe(this, adapter::updateInspections);
-    }
+        recycler.addItemDecoration(dividerItemDecoration);
+        adapter.mItemClickListener = new FlexibleAdapter.OnItemClickListener() {
+            @Override
+            public boolean onItemClick(View view, int position) {
+                adapter.toggleSelection(position);
+                viewModel.onSelect(position);
+                return true;
+            }
+        };
+     }
 
     private void initButtons() {
         Button button;
