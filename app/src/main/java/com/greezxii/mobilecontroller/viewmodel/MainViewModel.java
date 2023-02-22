@@ -6,10 +6,14 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.google.common.util.concurrent.FutureCallback;
+import com.greezxii.mobilecontroller.activities.MainActivity;
 import com.greezxii.mobilecontroller.repository.DataRepository;
 import com.greezxii.mobilecontroller.database.Inspection;
 
 import java.util.List;
+
+import eu.davidea.flexibleadapter.FlexibleAdapter;
+import eu.davidea.flexibleadapter.items.IFlexible;
 
 public class MainViewModel extends ViewModel {
 
@@ -19,14 +23,15 @@ public class MainViewModel extends ViewModel {
     public List<Inspection> inspections;
     public MutableLiveData<Inspection> selectedInspection;
     public MutableLiveData<Integer> performedInspectionsCount;
+    private FlexibleAdapter<IFlexible> mAdapter;
 
     public MainViewModel(DataRepository repository, AlertDialog alertDialog) {
         this.liveInspections = new MutableLiveData<>();
-        selectedInspection = new MutableLiveData<>();
+        this.selectedInspection = new MutableLiveData<>();
         this.repository = repository;
         this.alertDialog = alertDialog;
         loadInspectionsFromDB();
-        performedInspectionsCount = new MutableLiveData<>();
+        this.performedInspectionsCount = new MutableLiveData<>();
         updatePerformedInspectionsCount();
     }
 
@@ -41,13 +46,23 @@ public class MainViewModel extends ViewModel {
         performedInspectionsCount.setValue(value);
     }
 
+    public void updateRecyclerView() {
+        if (mAdapter != null)
+            mAdapter.updateDataSet(MainActivity.createFlexibleList(inspections));
+    }
+
+    public void setAdapter(FlexibleAdapter<IFlexible> adapter) {
+        mAdapter = adapter;
+    }
+
     public void loadInspectionsFromDB() {
-        repository.makeInspectionsCacheFromMock();
+        //repository.makeInspectionsCacheFromMock();
         inspections = repository.getAllInspections();
         if (!inspections.isEmpty()) {
             liveInspections.setValue(inspections);
             selectedInspection.setValue(inspections.get(0));
         }
+        updateRecyclerView();
     }
 
     public void updateSelectedInspection() {
@@ -69,7 +84,7 @@ public class MainViewModel extends ViewModel {
         FutureCallback<Void> callback = new FutureCallback<Void>() {
             @Override
             public void onSuccess(Void result) {
-                showMessageBox("Уведомление", "Загрузка данных выполнена успешно.");
+                showMessageBox("Уведомление", "Выгрузка данных выполнена успешно.");
             }
 
             @Override
@@ -86,6 +101,7 @@ public class MainViewModel extends ViewModel {
             public void onSuccess(List<Inspection> result) {
                 loadInspectionsFromDB();
                 showMessageBox("Уведомление", "Загрузка данных выполнена успешно.");
+                updateRecyclerView();
             }
 
             @Override

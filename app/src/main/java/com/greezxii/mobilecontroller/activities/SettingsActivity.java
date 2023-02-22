@@ -1,8 +1,10 @@
-package com.greezxii.mobilecontroller;
+package com.greezxii.mobilecontroller.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.greezxii.mobilecontroller.R;
 
 public class SettingsActivity extends AppCompatActivity {
 

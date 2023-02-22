@@ -1,4 +1,4 @@
-package com.greezxii.mobilecontroller;
+package com.greezxii.mobilecontroller.activities;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
+import com.greezxii.mobilecontroller.R;
 import com.greezxii.mobilecontroller.database.Inspection;
 import com.greezxii.mobilecontroller.databinding.ActivityMainBinding;
 import com.greezxii.mobilecontroller.recycler.InspectionFlexibleItem;
@@ -35,51 +36,50 @@ import eu.davidea.flexibleadapter.items.IFlexible;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ActivityMainBinding binding;
-    public MainViewModel viewModel;
+    private ActivityMainBinding mBinding;
+    public MainViewModel mViewModel;
+    private FlexibleAdapter<IFlexible> mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initViewModel();
         initButtons();
-        initRecycler(viewModel.inspections);
+        initRecycler(mViewModel.inspections);
     }
 
     private void initViewModel() {
         ListeningExecutorService executorService = MoreExecutors.listeningDecorator(Executors.newSingleThreadExecutor());
         DataRepository dataRepository = new DataRepository(this, executorService);
-        viewModel = new MainViewModel(dataRepository, createAlertDialog());
+        mViewModel = new MainViewModel(dataRepository, createAlertDialog());
 
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        binding.setLifecycleOwner(this);
-        binding.setVm(viewModel);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        mBinding.setLifecycleOwner(this);
+        mBinding.setVm(mViewModel);
     }
 
     private void initRecycler(List<Inspection> data) {
-        List<IFlexible> flexibleList = new ArrayList<>();
-        for (int i = 0; i < data.size(); i++)
-            flexibleList.add(new InspectionFlexibleItem(data.get(i)));
-
-        FlexibleAdapter<IFlexible> adapter = new FlexibleAdapter<>(flexibleList);
-        adapter.setMode(SelectableAdapter.Mode.SINGLE);
+        List<IFlexible> flexibleList = createFlexibleList(data);
+        mAdapter = new FlexibleAdapter<>(flexibleList);
+        mAdapter.setMode(SelectableAdapter.Mode.SINGLE);
+        if (!flexibleList.isEmpty())
+            mAdapter.toggleSelection(0);
         RecyclerView recycler = findViewById(R.id.recycler_inspections);
         recycler.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        recycler.setAdapter(adapter);
+        recycler.setAdapter(mAdapter);
         // Divider
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, RecyclerView.VERTICAL);
         Drawable divider = ResourcesCompat.getDrawable(getResources(), R.drawable.divider_drawable, null);
         if(divider != null)
             dividerItemDecoration.setDrawable(divider);
         recycler.addItemDecoration(dividerItemDecoration);
-        adapter.mItemClickListener = new FlexibleAdapter.OnItemClickListener() {
-            @Override
-            public boolean onItemClick(View view, int position) {
-                adapter.toggleSelection(position);
-                viewModel.onSelect(position);
-                return true;
-            }
+        // Click listener
+        mAdapter.mItemClickListener = (view, position) -> {
+            mAdapter.toggleSelection(position);
+            mViewModel.onSelect(position);
+            return true;
         };
+        mViewModel.setAdapter(mAdapter);
      }
 
     private void initButtons() {
@@ -99,9 +99,16 @@ public class MainActivity extends AppCompatActivity {
         return alertDialogBuilder.create();
     }
 
+    public static List<IFlexible> createFlexibleList(List<Inspection> data) {
+        List<IFlexible> flexibleList = new ArrayList<>();
+        for (int i = 0; i < data.size(); i++)
+            flexibleList.add(new InspectionFlexibleItem(data.get(i)));
+        return flexibleList;
+    }
+
     @Override
     protected void onPause() {
-        viewModel.updateSelectedInspection();
+        mViewModel.updateSelectedInspection();
         super.onPause();
     }
 
@@ -117,11 +124,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void saveToTFTP(MenuItem item) {
-        viewModel.saveToTFTP();
+        mViewModel.saveToTFTP();
     }
 
     public void loadFromTFTP(MenuItem item) {
-        viewModel.loadFromTFTP();
+        mViewModel.loadFromTFTP();
+        List<IFlexible> flexibleList = createFlexibleList(mViewModel.inspections);
+        mAdapter.updateDataSet(flexibleList);
     }
 
     public void showBar(CharSequence msg) {
