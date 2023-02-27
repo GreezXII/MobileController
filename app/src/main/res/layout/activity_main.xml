@@ -67,7 +67,7 @@
             android:textColor="#000000"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:contract="@{vm.selectedInspection.id}"
+            app:contract="@{vm.mSelectedInspection.id}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.19"
             app:layout_constraintStart_toEndOf="@+id/textView_label_contract"
@@ -92,7 +92,7 @@
             android:textColor="#000000"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:text="@{vm.selectedInspection.fullName}"
+            android:text="@{vm.mSelectedInspection.fullName}"
             app:layout_constraintStart_toStartOf="@+id/textView_contract"
             app:layout_constraintTop_toBottomOf="@+id/textView_contract" />
 
@@ -115,7 +115,7 @@
             android:textColor="#000000"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:text="@{vm.selectedInspection.contacts}"
+            android:text="@{vm.mSelectedInspection.contacts}"
             app:layout_constraintStart_toStartOf="@+id/textView_fullName"
             app:layout_constraintTop_toBottomOf="@+id/textView_fullName" />
 
@@ -138,7 +138,7 @@
             android:textColor="#000000"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:meter="@{vm.selectedInspection}"
+            app:meter="@{vm.mSelectedInspection}"
             app:layout_constraintStart_toStartOf="@+id/textView_phoneNumber"
             app:layout_constraintTop_toBottomOf="@+id/textView_phoneNumber" />
 
@@ -161,7 +161,7 @@
             android:textColor="#000000"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:date="@{vm.selectedInspection.installationDate}"
+            app:date="@{vm.mSelectedInspection.installationDate}"
             app:layout_constraintStart_toStartOf="@+id/textView_meter"
             app:layout_constraintTop_toBottomOf="@+id/textView_meter" />
 
@@ -184,7 +184,7 @@
             android:textColor="#000000"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:booleanValue="@{vm.selectedInspection.isDisabled}"
+            app:booleanValue="@{vm.mSelectedInspection.isDisabled}"
             app:layout_constraintStart_toStartOf="@+id/textView_installationDate"
             app:layout_constraintTop_toBottomOf="@+id/textView_installationDate" />
 
@@ -207,7 +207,7 @@
             android:textColor="#000000"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:coloredDecimalValue="@{vm.selectedInspection.debt}"
+            app:coloredDecimalValue="@{vm.mSelectedInspection.debt}"
             app:layout_constraintStart_toStartOf="@+id/textView_isDisabled"
             app:layout_constraintTop_toBottomOf="@+id/textView_isDisabled" />
 
@@ -230,7 +230,7 @@
             android:textColor="#000000"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:date="@{vm.selectedInspection.lastInspectionDate}"
+            app:date="@{vm.mSelectedInspection.lastInspectionDate}"
             app:layout_constraintStart_toStartOf="@+id/textView_debt"
             app:layout_constraintTop_toBottomOf="@+id/textView_debt" />
 
@@ -253,7 +253,7 @@
             android:textColor="#000000"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:coloredDecimalValue="@{vm.selectedInspection.debtByActs}"
+            app:coloredDecimalValue="@{vm.mSelectedInspection.debtByActs}"
             app:layout_constraintStart_toStartOf="@+id/textView_inspectionDate"
             app:layout_constraintTop_toBottomOf="@+id/textView_inspectionDate" />
 
@@ -300,7 +300,7 @@
             android:textColor="#000000"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:date="@{vm.selectedInspection.verificationDate}"
+            app:date="@{vm.mSelectedInspection.verificationDate}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView_meter" />
 
@@ -312,7 +312,7 @@
             android:textColor="#000000"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:booleanValue="@{vm.selectedInspection.isAntimagnet}"
+            app:booleanValue="@{vm.mSelectedInspection.isAntimagnet}"
             app:layout_constraintStart_toStartOf="@+id/textView_verification"
             app:layout_constraintTop_toBottomOf="@+id/textView_verification" />
 
@@ -324,7 +324,7 @@
             android:textColor="#000000"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:date="@{vm.selectedInspection.paymentDate}"
+            app:date="@{vm.mSelectedInspection.paymentDate}"
             app:layout_constraintStart_toStartOf="@+id/textView_isAntimagnet"
             app:layout_constraintTop_toBottomOf="@+id/textView_isAntimagnet" />
 
@@ -334,7 +334,7 @@
             android:layout_height="0dp"
             android:layout_marginEnd="16dp"
             android:text="@string/openInfo"
-            android:enabled="@{vm.selectedInspection != null}"
+            android:enabled="@{vm.mSelectedInspection != null}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -353,7 +353,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="@{Integer.toString(vm.inspections.size())}"
+            android:text="@{Integer.toString(vm.mInspections.size())}"
             android:textColor="#000000"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -375,7 +375,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="@{Integer.toString(vm.performedInspectionsCount)}"
+            android:text="@{Integer.toString(vm.mPerformedInspectionsCount)}"
             android:textColor="#000000"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -392,9 +392,9 @@
             android:ems="10"
             android:hint="@string/note"
             android:inputType="text"
-            android:text="@={vm.selectedInspection.note}"
+            android:text="@={vm.mSelectedInspection.note}"
             android:importantForAutofill="no"
-            android:enabled="@{vm.selectedInspection != null}"
+            android:enabled="@{vm.mSelectedInspection != null}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/editText_value"
             app:layout_constraintTop_toBottomOf="@+id/editText_value" />
@@ -408,8 +408,8 @@
             android:hint="@string/Value"
             android:autofillHints="@string/Value"
             android:inputType="numberDecimal"
-            android:text="@={BindingAdapters.nullableIntegerToString(vm.selectedInspection.value)}"
-            android:enabled="@{vm.selectedInspection != null}"
+            android:text="@={BindingAdapters.nullableIntegerToString(vm.mSelectedInspection.value)}"
+            android:enabled="@{vm.mSelectedInspection != null}"
             app:layout_constraintStart_toEndOf="@+id/recycler_inspections"
             app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 

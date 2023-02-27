@@ -10,6 +10,7 @@ import com.greezxii.mobilecontroller.activities.MainActivity;
 import com.greezxii.mobilecontroller.repository.DataRepository;
 import com.greezxii.mobilecontroller.database.Inspection;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import eu.davidea.flexibleadapter.FlexibleAdapter;
@@ -17,38 +18,49 @@ import eu.davidea.flexibleadapter.items.IFlexible;
 
 public class MainViewModel extends ViewModel {
 
-    private final AlertDialog alertDialog;
-    private final DataRepository repository;
-    public MutableLiveData<List<Inspection>> liveInspections;
-    public List<Inspection> inspections;
-    public MutableLiveData<Inspection> selectedInspection;
-    public MutableLiveData<Integer> performedInspectionsCount;
+    private final AlertDialog mAlertDialog;
+    private final DataRepository mRepository;
+    public MutableLiveData<List<Inspection>> mLiveInspections;
+    public List<Inspection> mInspections;
+    public MutableLiveData<Inspection> mSelectedInspection;
+    public MutableLiveData<Integer> mPerformedInspectionsCount;
     private FlexibleAdapter<IFlexible> mAdapter;
 
     public MainViewModel(DataRepository repository, AlertDialog alertDialog) {
-        this.liveInspections = new MutableLiveData<>();
-        this.selectedInspection = new MutableLiveData<>();
-        this.repository = repository;
-        this.alertDialog = alertDialog;
+        this.mInspections = new ArrayList<>();
+        this.mLiveInspections = new MutableLiveData<>();
+        this.mSelectedInspection = new MutableLiveData<>();
+        this.mRepository = repository;
+        this.mAlertDialog = alertDialog;
         loadInspectionsFromDB();
-        this.performedInspectionsCount = new MutableLiveData<>();
+        this.mPerformedInspectionsCount = new MutableLiveData<>();
         updatePerformedInspectionsCount();
     }
 
     private void showMessageBox(String title, String message) {
-        alertDialog.setTitle(title);
-        alertDialog.setMessage(message);
-        alertDialog.show();
+        mAlertDialog.setTitle(title);
+        mAlertDialog.setMessage(message);
+        mAlertDialog.show();
     }
 
     private void updatePerformedInspectionsCount() {
-        Integer value = repository.getPerformedInspectionsCount();
-        performedInspectionsCount.setValue(value);
+        FutureCallback<Integer> callback = new FutureCallback<Integer>() {
+            @Override
+            public void onSuccess(Integer result) {
+                mPerformedInspectionsCount.setValue(result);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                showMessageBox("Ошибка", "Не удалось получить количество выполненных обходов");
+            }
+        };
+        mRepository.getPerformedInspectionsCount(callback);
     }
 
     public void updateRecyclerView() {
         if (mAdapter != null)
-            mAdapter.updateDataSet(MainActivity.createFlexibleList(inspections));
+            mAdapter.updateDataSet(MainActivity.createFlexibleList(mInspections));
     }
 
     public void setAdapter(FlexibleAdapter<IFlexible> adapter) {
@@ -57,27 +69,60 @@ public class MainViewModel extends ViewModel {
 
     public void loadInspectionsFromDB() {
         //repository.makeInspectionsCacheFromMock();
-        inspections = repository.getAllInspections();
-        if (!inspections.isEmpty()) {
-            liveInspections.setValue(inspections);
-            selectedInspection.setValue(inspections.get(0));
-        }
-        updateRecyclerView();
+        FutureCallback<List<Inspection>> callback = new FutureCallback<List<Inspection>>() {
+            @Override
+            public void onSuccess(List<Inspection> result) {
+                mInspections = result;
+                if (!mInspections.isEmpty()) {
+                    mLiveInspections.setValue(mInspections);
+                    mSelectedInspection.setValue(mInspections.get(0));
+                }
+                updateRecyclerView();
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                showMessageBox("Ошибка", "Не удалось выполнить загрузку из базы данных.");
+            }
+        };
+        mRepository.getAllInspections(callback);
     }
 
     public void updateSelectedInspection() {
-        repository.updateInspection(selectedInspection.getValue());
+        FutureCallback<Void> callback = new FutureCallback<Void>() {
+            @Override
+            public void onSuccess(Void result) {
+                showMessageBox("Информация", "Запись успешно обновлена.");
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                showMessageBox("Ошибка", "Не удалось обновить запись в базе данных.");
+            }
+        };
+        mRepository.updateInspection(mSelectedInspection.getValue(), callback);
     }
 
     public void deleteInspections() {
-        repository.deleteInspections(inspections);
+        FutureCallback<Void> callback = new FutureCallback<Void>() {
+            @Override
+            public void onSuccess(Void result) {
+                showMessageBox("Информация", "Запись успешно удалена.");
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                showMessageBox("Ошибка", "Не удалось удалить запись в базе данных.");
+            }
+        };
+        mRepository.deleteInspections(mInspections, callback);
     }
 
     public void onSelect(int position) {
         updateSelectedInspection();
         updatePerformedInspectionsCount();
-        Inspection selected = inspections.get(position);
-        selectedInspection.setValue(selected);
+        Inspection selected = mInspections.get(position);
+        mSelectedInspection.setValue(selected);
     }
 
     public void saveToTFTP() {
@@ -92,15 +137,16 @@ public class MainViewModel extends ViewModel {
                 showMessageBox("Произошла ошибка", t.getMessage());
             }
         };
-        repository.saveInspectionsToTFTPAsync(callback);
+        loadInspectionsFromDB();
+        mRepository.saveInspectionsToTFTPAsync(mInspections, callback);
     }
 
     public void loadFromTFTP() {
         FutureCallback<List<Inspection>> callback = new FutureCallback<List<Inspection>>() {
             @Override
             public void onSuccess(List<Inspection> result) {
+                showMessageBox("Уведомление", "Загрузка данных из TFTP выполнена успешно.");
                 loadInspectionsFromDB();
-                showMessageBox("Уведомление", "Загрузка данных выполнена успешно.");
                 updateRecyclerView();
             }
 
@@ -109,6 +155,6 @@ public class MainViewModel extends ViewModel {
                 showMessageBox("Произошла ошибка", t.getMessage());
             }
         };
-        repository.loadInspectionsFromTFTPAsync(callback);
+        mRepository.loadInspectionsFromTFTPAsync(callback);
     }
 }

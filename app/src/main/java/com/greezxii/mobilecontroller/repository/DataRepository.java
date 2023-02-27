@@ -26,19 +26,20 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.Future;
 
 public class DataRepository {
 
-    ListeningExecutorService executorService;
-    Context context;
+    ListeningExecutorService mExecutorService;
+    Context mContext;
     public String TFTP_SERVER_IP = "192.168.1.158";
     public String INPUT_FILE_NAME = "input.db";
     public MobileControllerDatabase db;
 
     public DataRepository(Context context, ListeningExecutorService executorService) {
-        this.context = context;
-        this.executorService = executorService;
-        db = MobileControllerDatabase.getDatabase(this.context);
+        this.mContext = context;
+        this.mExecutorService = executorService;
+        db = MobileControllerDatabase.getDatabase(mContext);
     }
 
     private List<Inspection> parseInspections(String tftpFileContent) {
@@ -55,10 +56,9 @@ public class DataRepository {
         return inspections;
     }
 
-    public void saveInspectionsToTFTPAsync(FutureCallback<Void> callback) {
-        ListenableFuture<Void> future = executorService.submit(() -> {
+    public void saveInspectionsToTFTPAsync(List<Inspection> inspections, FutureCallback<Void> callback) {
+        ListenableFuture<Void> future = mExecutorService.submit(() -> {
             // Create string content of file
-            List<Inspection> inspections = getAllInspections();
             StringBuilder builder = new StringBuilder();
             for (int i = 0; i < inspections.size(); i++) {
                 Inspection inspection = inspections.get(i);
@@ -80,11 +80,11 @@ public class DataRepository {
             client.close();
             return null;
         });
-        Futures.addCallback(future, callback, ContextCompat.getMainExecutor(context));
+        Futures.addCallback(future, callback, ContextCompat.getMainExecutor(mContext));
     }
 
     public void loadInspectionsFromTFTPAsync(FutureCallback<List<Inspection>> callback) {
-        ListenableFuture<List<Inspection>> future = executorService.submit(() -> {
+        ListenableFuture<List<Inspection>> future = mExecutorService.submit(() -> {
             // Read file content from TFTP
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             TFTPClient client = new TFTPClient();
@@ -105,111 +105,57 @@ public class DataRepository {
             inspectionDao.insertAll(inspections.toArray(new Inspection[0]));
             return inspections;
         });
-        Futures.addCallback(future, callback, ContextCompat.getMainExecutor(context));
+        Futures.addCallback(future, callback, ContextCompat.getMainExecutor(mContext));
     }
 
-    public void makeInspectionsCacheFromMock() {
-        class Worker extends Thread {
-            @Override
-            public void run() {
-                super.run();
-                InspectionDao inspectionDao = db.inspectionDao();
-                List<Inspection> inspections = inspectionDao.getAllInspections();
-                if (!inspections.isEmpty())
-                    return;
-                try(InputStream inputStream = context.getAssets().open("input.db")) {
-                    String fileContent = IOUtils.toString(inputStream, Charset.defaultCharset());
-                    inspections = parseInspections(fileContent);
-                    inspectionDao.insertAll(inspections.toArray(new Inspection[0]));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+    public void makeInspectionsCacheFromMock(FutureCallback<Void> callback) {
+        ListenableFuture<Void> future = mExecutorService.submit(() -> {
+            InspectionDao inspectionDao = db.inspectionDao();
+            List<Inspection> inspections = inspectionDao.getAllInspections();
+            if (!inspections.isEmpty())
+                return null;
+            try(InputStream inputStream = mContext.getAssets().open("input.db")) {
+                String fileContent = IOUtils.toString(inputStream, Charset.defaultCharset());
+                inspections = parseInspections(fileContent);
+                inspectionDao.insertAll(inspections.toArray(new Inspection[0]));
+            } catch (IOException e) {
+                throw new Exception("Не удалось загрузить файл из TFTP сервера.");
             }
-        }
-        Worker worker = new Worker();
-        worker.start();
-        try {
-            worker.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+            return null;
+        });
+        Futures.addCallback(future, callback, ContextCompat.getMainExecutor(mContext));
     }
 
-    public List<Inspection> getAllInspections() {
-        class Worker extends Thread {
-            List<Inspection> result;
-            @Override
-            public void run() {
-                super.run();
-                InspectionDao inspectionDao = db.inspectionDao();
-                result = inspectionDao.getAllInspections();
-            }
-        }
-        Worker worker = new Worker();
-        worker.start();
-        try {
-            worker.join();
-        }
-        catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return worker.result;
+    public void getAllInspections(FutureCallback<List<Inspection>> callback) {
+        ListenableFuture<List<Inspection>> future = mExecutorService.submit(() -> {
+            InspectionDao inspectionDao = db.inspectionDao();
+            return inspectionDao.getAllInspections();
+        });
+        Futures.addCallback(future, callback, ContextCompat.getMainExecutor(mContext));
     }
 
-
-
-    public void updateInspection(Inspection inspection) {
-        class Worker extends Thread {
-            @Override
-            public void run() {
-                super.run();
-                InspectionDao inspectionDao = db.inspectionDao();
-                inspectionDao.updateInspection(inspection);
-            }
-        }
-        Worker worker = new Worker();
-        worker.start();
-        try {
-            worker.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    public void updateInspection(Inspection inspection, FutureCallback<Void> callback) {
+        ListenableFuture<Void> future = mExecutorService.submit(() -> {
+            InspectionDao inspectionDao = db.inspectionDao();
+            inspectionDao.updateInspection(inspection);
+            return null;
+        });
+        Futures.addCallback(future, callback, ContextCompat.getMainExecutor(mContext));
     }
 
-    public void deleteInspections(List<Inspection> inspections) {
-        class Worker extends Thread {
-            @Override
-            public void run() {
-                super.run();
-                InspectionDao inspectionDao = db.inspectionDao();
-                inspectionDao.deleteAll(inspections.toArray(new Inspection[0]));
-            }
-        }
-        Worker worker = new Worker();
-        worker.start();
-        try {
-            worker.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    public void deleteInspections(List<Inspection> inspections, FutureCallback<Void> callback) {
+        ListenableFuture<Void> future = mExecutorService.submit(() -> {
+            InspectionDao inspectionDao = db.inspectionDao();
+            inspectionDao.deleteAll(inspections.toArray(new Inspection[0]));
+            return null;
+        });
+        Futures.addCallback(future, callback, ContextCompat.getMainExecutor(mContext));
     }
 
-    public Integer getPerformedInspectionsCount() {
-        class Worker extends Thread {
-            Integer result;
-            @Override
-            public void run() {
-                super.run();
-                result = db.inspectionDao().getPerformedInspectionsCount();
-            }
-        }
-        Worker worker = new Worker();
-        worker.start();
-        try {
-            worker.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return worker.result;
+    public void getPerformedInspectionsCount(FutureCallback<Integer> callback) {
+        ListenableFuture<Integer> future = mExecutorService.submit(() -> {
+            return db.inspectionDao().getPerformedInspectionsCount();
+        });
+        Futures.addCallback(future, callback, ContextCompat.getMainExecutor(mContext));
     }
 }

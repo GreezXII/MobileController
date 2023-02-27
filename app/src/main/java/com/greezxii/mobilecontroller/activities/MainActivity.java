@@ -5,7 +5,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 
 import androidx.appcompat.app.AlertDialog;
@@ -45,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         initViewModel();
         initButtons();
-        initRecycler(mViewModel.inspections);
+        initRecycler(mViewModel.mInspections);
     }
 
     private void initViewModel() {
@@ -129,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void loadFromTFTP(MenuItem item) {
         mViewModel.loadFromTFTP();
-        List<IFlexible> flexibleList = createFlexibleList(mViewModel.inspections);
+        List<IFlexible> flexibleList = createFlexibleList(mViewModel.mInspections);
         mAdapter.updateDataSet(flexibleList);
     }
 
