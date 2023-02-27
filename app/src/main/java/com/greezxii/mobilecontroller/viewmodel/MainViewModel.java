@@ -23,6 +23,7 @@ public class MainViewModel extends ViewModel {
     public MutableLiveData<List<Inspection>> mLiveInspections;
     public List<Inspection> mInspections;
     public MutableLiveData<Inspection> mSelectedInspection;
+    public MutableLiveData<Integer> mInspectionsCount;
     public MutableLiveData<Integer> mPerformedInspectionsCount;
     private FlexibleAdapter<IFlexible> mAdapter;
 
@@ -33,6 +34,7 @@ public class MainViewModel extends ViewModel {
         this.mRepository = repository;
         this.mAlertDialog = alertDialog;
         loadInspectionsFromDB();
+        this.mInspectionsCount = new MutableLiveData<>();
         this.mPerformedInspectionsCount = new MutableLiveData<>();
         updatePerformedInspectionsCount();
     }
@@ -52,7 +54,9 @@ public class MainViewModel extends ViewModel {
 
             @Override
             public void onFailure(Throwable t) {
-                showMessageBox("Ошибка", "Не удалось получить количество выполненных обходов");
+                String message = "Не удалось получить количество выполненных обходов. "
+                        + t.getMessage();
+                showMessageBox("Ошибка", message);
             }
         };
         mRepository.getPerformedInspectionsCount(callback);
@@ -73,6 +77,7 @@ public class MainViewModel extends ViewModel {
             @Override
             public void onSuccess(List<Inspection> result) {
                 mInspections = result;
+                mInspectionsCount.setValue(mInspections.size());
                 if (!mInspections.isEmpty()) {
                     mLiveInspections.setValue(mInspections);
                     mSelectedInspection.setValue(mInspections.get(0));
@@ -82,7 +87,8 @@ public class MainViewModel extends ViewModel {
 
             @Override
             public void onFailure(Throwable t) {
-                showMessageBox("Ошибка", "Не удалось выполнить загрузку из базы данных.");
+                String message = "Не удалось выполнить загрузку из базы данных. " + t.getMessage();
+                showMessageBox("Ошибка", message);
             }
         };
         mRepository.getAllInspections(callback);
@@ -92,12 +98,13 @@ public class MainViewModel extends ViewModel {
         FutureCallback<Void> callback = new FutureCallback<Void>() {
             @Override
             public void onSuccess(Void result) {
-                showMessageBox("Информация", "Запись успешно обновлена.");
+                //showMessageBox("Информация", "Запись успешно обновлена.");
             }
 
             @Override
             public void onFailure(Throwable t) {
-                showMessageBox("Ошибка", "Не удалось обновить запись в базе данных.");
+                String message = "Не удалось обновить запись в базе данных. " + t.getMessage();
+                showMessageBox("Ошибка", message);
             }
         };
         mRepository.updateInspection(mSelectedInspection.getValue(), callback);
@@ -112,7 +119,8 @@ public class MainViewModel extends ViewModel {
 
             @Override
             public void onFailure(Throwable t) {
-                showMessageBox("Ошибка", "Не удалось удалить запись в базе данных.");
+                String message = "Не удалось удалить запись в базе данных. " + t.getMessage();
+                showMessageBox("Ошибка", message);
             }
         };
         mRepository.deleteInspections(mInspections, callback);
@@ -134,7 +142,8 @@ public class MainViewModel extends ViewModel {
 
             @Override
             public void onFailure(@NonNull Throwable t) {
-                showMessageBox("Произошла ошибка", t.getMessage());
+                String message = "Не удалось сохранить данные на TFTP сервер. " + t.getMessage();
+                showMessageBox("Ошибка", message);
             }
         };
         loadInspectionsFromDB();
@@ -152,7 +161,8 @@ public class MainViewModel extends ViewModel {
 
             @Override
             public void onFailure(Throwable t) {
-                showMessageBox("Произошла ошибка", t.getMessage());
+                String message = "Не удалось загрузить данные из TFTP сервера. " + t.getMessage();
+                showMessageBox("Ошибка", message);
             }
         };
         mRepository.loadInspectionsFromTFTPAsync(callback);
