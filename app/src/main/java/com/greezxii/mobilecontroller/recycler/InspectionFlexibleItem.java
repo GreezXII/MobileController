@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.greezxii.mobilecontroller.R;
-import com.greezxii.mobilecontroller.database.Inspection;
+import com.greezxii.mobilecontroller.model.Inspection;
 
 import java.util.List;
 

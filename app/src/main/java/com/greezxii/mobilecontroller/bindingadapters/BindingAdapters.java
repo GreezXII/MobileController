@@ -5,7 +5,7 @@ import android.widget.TextView;
 import androidx.databinding.BindingAdapter;
 import androidx.databinding.InverseMethod;
 
-import com.greezxii.mobilecontroller.database.Inspection;
+import com.greezxii.mobilecontroller.model.Inspection;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;

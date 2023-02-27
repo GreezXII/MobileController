@@ -1,4 +1,4 @@
-package com.greezxii.mobilecontroller.database;
+package com.greezxii.mobilecontroller.model;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;

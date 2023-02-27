@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel;
 import com.google.common.util.concurrent.FutureCallback;
 import com.greezxii.mobilecontroller.activities.MainActivity;
 import com.greezxii.mobilecontroller.repository.DataRepository;
-import com.greezxii.mobilecontroller.database.Inspection;
+import com.greezxii.mobilecontroller.model.Inspection;
 
 import java.util.ArrayList;
 import java.util.List;

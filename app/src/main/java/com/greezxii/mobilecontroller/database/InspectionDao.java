@@ -7,6 +7,8 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
+import com.greezxii.mobilecontroller.model.Inspection;
+
 import java.util.List;
 
 @Dao

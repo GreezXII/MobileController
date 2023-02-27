@@ -8,7 +8,7 @@ import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
-import com.greezxii.mobilecontroller.database.Inspection;
+import com.greezxii.mobilecontroller.model.Inspection;
 import com.greezxii.mobilecontroller.database.InspectionDao;
 import com.greezxii.mobilecontroller.database.MobileControllerDatabase;
 
@@ -26,7 +26,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.Future;
 
 public class DataRepository {
 

@@ -19,7 +19,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.greezxii.mobilecontroller.R;
-import com.greezxii.mobilecontroller.database.Inspection;
+import com.greezxii.mobilecontroller.model.Inspection;
 import com.greezxii.mobilecontroller.databinding.ActivityMainBinding;
 import com.greezxii.mobilecontroller.recycler.InspectionFlexibleItem;
 import com.greezxii.mobilecontroller.repository.DataRepository;
