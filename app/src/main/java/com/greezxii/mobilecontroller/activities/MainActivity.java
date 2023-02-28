@@ -5,6 +5,8 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 
@@ -45,30 +47,21 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         initViewModel();
         initButtons();
-        initRecycler(mViewModel.mInspections);
+        initRecycler();
         initSpinner();
-    }
-
-    private void initSpinner() {
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this,
-                androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, mViewModel.mDistinctAddresses);
-        spinnerAdapter.setDropDownViewResource(androidx.appcompat.R.layout.support_simple_spinner_dropdown_item);
-        mBinding.spinnerAddresses.setAdapter(spinnerAdapter);
-        mViewModel.setSpinnerAdapter(spinnerAdapter);
     }
 
     private void initViewModel() {
         ListeningExecutorService executorService = MoreExecutors.listeningDecorator(Executors.newSingleThreadExecutor());
         DataRepository dataRepository = new DataRepository(this, executorService);
         mViewModel = new MainViewModel(dataRepository, createAlertDialog());
-
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         mBinding.setLifecycleOwner(this);
         mBinding.setVm(mViewModel);
     }
 
-    private void initRecycler(List<Inspection> data) {
-        List<IFlexible> flexibleList = createFlexibleList(data);
+    private void initRecycler() {
+        List<IFlexible> flexibleList = createFlexibleList(mViewModel.mInspections);
         mAdapter = new FlexibleAdapter<>(flexibleList);
         mAdapter.setMode(SelectableAdapter.Mode.SINGLE);
         if (!flexibleList.isEmpty())
@@ -99,6 +92,27 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, InfoActivity.class);
             startActivity(intent);
         });
+    }
+
+    private void initSpinner() {
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this,
+                androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, mViewModel.mDistinctAddresses);
+        spinnerAdapter.setDropDownViewResource(androidx.appcompat.R.layout.support_simple_spinner_dropdown_item);
+        mBinding.spinnerAddresses.setAdapter(spinnerAdapter);
+        mBinding.spinnerAddresses.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedAddress = (String)parent.getItemAtPosition(position);
+                mViewModel.setFilter(selectedAddress);
+                mViewModel.getInspectionsFromDB();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                mViewModel.setFilter("");
+            }
+        });
+        mViewModel.setSpinnerAdapter(spinnerAdapter);
     }
 
     private AlertDialog createAlertDialog() {

@@ -34,6 +34,7 @@ public class MainViewModel extends ViewModel {
     public List<String> mDistinctAddresses;
     private FlexibleAdapter<IFlexible> mRecyclerAdapter;
     private ArrayAdapter<String> mSpinnerAdapter;
+    private String mFilter;
 
     public MainViewModel(DataRepository repository, AlertDialog alertDialog) {
         this.mInspections = new ArrayList<>();
@@ -46,6 +47,7 @@ public class MainViewModel extends ViewModel {
         this.mInspectionsCount = new MutableLiveData<>();
         this.mPerformedInspectionsCount = new MutableLiveData<>();
         updatePerformedInspectionsCount();
+        mFilter = "";
     }
 
     private void showMessageBox(String title, String message) {
@@ -75,7 +77,11 @@ public class MainViewModel extends ViewModel {
         if (mRecyclerAdapter != null)
             mRecyclerAdapter.updateDataSet(MainActivity.createFlexibleList(mInspections));
     }
-    
+
+    public void setFilter(String filter) {
+        mFilter = filter;
+    }
+
     public void setRecyclerAdapter(FlexibleAdapter<IFlexible> adapter) {
         mRecyclerAdapter = adapter;
     }
@@ -96,22 +102,31 @@ public class MainViewModel extends ViewModel {
         FutureCallback<List<Inspection>> callback = new FutureCallback<List<Inspection>>() {
             @Override
             public void onSuccess(List<Inspection> result) {
+                // Load from DB
                 mInspections = result;
-                mInspectionsCount.setValue(mInspections.size());
+
+                // Populate spinner
+                if (mFilter.equals("")) {
+                    SortedSet<String> distinctAddresses = new TreeSet<>();
+                    distinctAddresses.add("");
+                    for (Inspection i: mInspections) {
+                        distinctAddresses.add(i.getAddress());
+                    }
+                    mSpinnerAdapter.clear();
+                    for (String address : distinctAddresses) {
+                        mSpinnerAdapter.add(address);
+                    }
+                } else
+                    // Apply filter
+                    mInspections.removeIf(insp -> !mFilter.equals(insp.getAddress()));
+
+                // Update recycler view
                 if (!mInspections.isEmpty()) {
                     mLiveInspections.setValue(mInspections);
                     mSelectedInspection.setValue(mInspections.get(0));
                 }
                 updateRecyclerView();
-                SortedSet<String> distinctAddresses = new TreeSet<>();
-                distinctAddresses.add("");
-                for (Inspection i: mInspections) {
-                    distinctAddresses.add(i.getAddress());
-                }
-                mSpinnerAdapter.clear();
-                for (String address : distinctAddresses) {
-                    mSpinnerAdapter.add(address);
-                }
+                mInspectionsCount.setValue(mInspections.size());
             }
 
             @Override
