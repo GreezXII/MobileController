@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 
 import androidx.appcompat.app.AlertDialog;
@@ -45,6 +46,15 @@ public class MainActivity extends AppCompatActivity {
         initViewModel();
         initButtons();
         initRecycler(mViewModel.mInspections);
+        initSpinner();
+    }
+
+    private void initSpinner() {
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this,
+                androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, mViewModel.mDistinctAddresses);
+        spinnerAdapter.setDropDownViewResource(androidx.appcompat.R.layout.support_simple_spinner_dropdown_item);
+        mBinding.spinnerAddresses.setAdapter(spinnerAdapter);
+        mViewModel.setSpinnerAdapter(spinnerAdapter);
     }
 
     private void initViewModel() {
@@ -78,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
             mViewModel.onSelect(position);
             return true;
         };
-        mViewModel.setAdapter(mAdapter);
+        mViewModel.setRecyclerAdapter(mAdapter);
      }
 
     private void initButtons() {

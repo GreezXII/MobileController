@@ -156,5 +156,4 @@ public class Inspection {
             result += apartmentLetter;
         return result;
     }
-
 }
