@@ -124,6 +124,7 @@ public class MainViewModel extends ViewModel {
                 if (!mInspections.isEmpty()) {
                     mLiveInspections.setValue(mInspections);
                     mSelectedInspection.setValue(mInspections.get(0));
+                    mRecyclerAdapter.toggleSelection(0);
                 }
                 updateRecyclerView();
                 mInspectionsCount.setValue(mInspections.size());
