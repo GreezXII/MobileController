@@ -6,16 +6,16 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-import com.greezxii.mobilecontroller.model.Inspection;
+import com.greezxii.mobilecontroller.model.Card;
 
-@Database(version = 1, entities = {Inspection.class})
+@Database(version = 1, entities = {Card.class})
 public abstract class MobileControllerDatabase extends RoomDatabase {
-    public abstract InspectionDao inspectionDao();
+    public abstract CardDao cardsDao();
     private static MobileControllerDatabase INSTANCE;
     public static MobileControllerDatabase getDatabase(Context context) {
         if(INSTANCE == null)
         {
-            INSTANCE = Room.databaseBuilder(context, MobileControllerDatabase.class, "inspections.db").build();
+            INSTANCE = Room.databaseBuilder(context, MobileControllerDatabase.class, "cards.db").build();
         }
         return INSTANCE;
     }

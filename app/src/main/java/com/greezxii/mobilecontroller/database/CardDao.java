@@ -7,27 +7,27 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.greezxii.mobilecontroller.model.Inspection;
+import com.greezxii.mobilecontroller.model.Card;
 
 import java.util.List;
 
 @Dao
-public interface InspectionDao {
+public interface CardDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertAll(Inspection... inspections);
+    void insertAll(Card... cards);
 
     @Delete
-    void deleteAll(Inspection... inspections);
+    void deleteAll(Card... cards);
 
     @Update
-    void updateInspection(Inspection inspection);
+    void updateCard(Card card);
 
-    @Query("SELECT * FROM Inspection ORDER BY " +
+    @Query("SELECT * FROM Card ORDER BY " +
             "street, buildingNumber, buildingLetter, " +
             "blockNumber, blockLetter, " +
             "apartmentNumber, apartmentLetter")
-    List<Inspection> getAllInspections();
+    List<Card> getAllCards();
 
-    @Query("SELECT Count(*) FROM Inspection WHERE value >= 0")
+    @Query("SELECT Count(*) FROM Card WHERE consumption >= 0")
     Integer getPerformedInspectionsCount();
 }

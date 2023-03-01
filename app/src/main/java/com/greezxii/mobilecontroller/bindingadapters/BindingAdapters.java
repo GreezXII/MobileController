@@ -5,7 +5,8 @@ import android.widget.TextView;
 import androidx.databinding.BindingAdapter;
 import androidx.databinding.InverseMethod;
 
-import com.greezxii.mobilecontroller.model.Inspection;
+import com.greezxii.mobilecontroller.model.Card;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -32,15 +33,15 @@ public class BindingAdapters {
     }
 
     @BindingAdapter("meter")
-    public static void setMeter(TextView view, Inspection inspection) {
-        if (inspection == null)
+    public static void setMeter(TextView view, Card card) {
+        if (card == null)
             view.setText("");
         else {
             String result = String.format(new Locale("ru"),
                     "%s  № %s [%d]",
-                    inspection.meterModel,
-                    inspection.meterSerialId,
-                    inspection.numberOfDigits);
+                    card.meter.model,
+                    card.meter.serialId,
+                    card.meter.numberOfDigits);
             view.setText(result);
         }
     }

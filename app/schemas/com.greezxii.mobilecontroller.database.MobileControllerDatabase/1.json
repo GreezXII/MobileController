@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "96cca10a1eba767e27dbfe98f63043f2",
+    "identityHash": "bdd9fb7297492a3a8924ad6f8c74ce42",
     "entities": [
       {
-        "tableName": "Inspection",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `street` TEXT, `buildingNumber` INTEGER NOT NULL, `buildingLetter` TEXT, `blockNumber` INTEGER, `blockLetter` TEXT, `apartmentNumber` INTEGER, `apartmentLetter` TEXT, `fullName` TEXT, `meterSerialId` TEXT, `meterModel` TEXT, `paymentDate` INTEGER, `debt` TEXT, `lastInspectionDate` INTEGER, `isAntimagnet` INTEGER, `isDisabled` INTEGER, `debtByActs` TEXT, `contacts` TEXT, `installationDate` INTEGER, `verificationDate` INTEGER, `numberOfDigits` INTEGER NOT NULL, `info` TEXT, `note` TEXT, `value` INTEGER, PRIMARY KEY(`id`))",
+        "tableName": "Card",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT, `contacts` TEXT, `info` TEXT, `note` TEXT, `paymentDate` INTEGER, `lastInspectionDate` INTEGER, `debt` TEXT, `debtByActs` TEXT, `consumption` INTEGER, `isTroublesome` INTEGER, `street` TEXT, `buildingNumber` INTEGER, `buildingLetter` TEXT, `blockNumber` INTEGER, `blockLetter` TEXT, `apartmentNumber` INTEGER, `apartmentLetter` TEXT, `model` TEXT, `serialId` TEXT, `isAntimagnet` INTEGER, `isDisabled` INTEGER, `installationDate` INTEGER, `verificationDate` INTEGER, `numberOfDigits` INTEGER, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -15,98 +15,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "street",
-            "columnName": "street",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "buildingNumber",
-            "columnName": "buildingNumber",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "buildingLetter",
-            "columnName": "buildingLetter",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "blockNumber",
-            "columnName": "blockNumber",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "blockLetter",
-            "columnName": "blockLetter",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "apartmentNumber",
-            "columnName": "apartmentNumber",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "apartmentLetter",
-            "columnName": "apartmentLetter",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "fullName",
-            "columnName": "fullName",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "meterSerialId",
-            "columnName": "meterSerialId",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "meterModel",
-            "columnName": "meterModel",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "paymentDate",
-            "columnName": "paymentDate",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "debt",
-            "columnName": "debt",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "lastInspectionDate",
-            "columnName": "lastInspectionDate",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "isAntimagnet",
-            "columnName": "isAntimagnet",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "isDisabled",
-            "columnName": "isDisabled",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "debtByActs",
-            "columnName": "debtByActs",
+            "fieldPath": "name",
+            "columnName": "name",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -115,24 +25,6 @@
             "columnName": "contacts",
             "affinity": "TEXT",
             "notNull": false
-          },
-          {
-            "fieldPath": "installationDate",
-            "columnName": "installationDate",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "verificationDate",
-            "columnName": "verificationDate",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "numberOfDigits",
-            "columnName": "numberOfDigits",
-            "affinity": "INTEGER",
-            "notNull": true
           },
           {
             "fieldPath": "info",
@@ -147,8 +39,122 @@
             "notNull": false
           },
           {
-            "fieldPath": "value",
-            "columnName": "value",
+            "fieldPath": "paymentDate",
+            "columnName": "paymentDate",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "lastInspectionDate",
+            "columnName": "lastInspectionDate",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "debt",
+            "columnName": "debt",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "debtByActs",
+            "columnName": "debtByActs",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "consumption",
+            "columnName": "consumption",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isTroublesome",
+            "columnName": "isTroublesome",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "address.street",
+            "columnName": "street",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "address.buildingNumber",
+            "columnName": "buildingNumber",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "address.buildingLetter",
+            "columnName": "buildingLetter",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "address.blockNumber",
+            "columnName": "blockNumber",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "address.blockLetter",
+            "columnName": "blockLetter",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "address.apartmentNumber",
+            "columnName": "apartmentNumber",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "address.apartmentLetter",
+            "columnName": "apartmentLetter",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "meter.model",
+            "columnName": "model",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "meter.serialId",
+            "columnName": "serialId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "meter.isAntimagnet",
+            "columnName": "isAntimagnet",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "meter.isDisabled",
+            "columnName": "isDisabled",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "meter.installationDate",
+            "columnName": "installationDate",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "meter.verificationDate",
+            "columnName": "verificationDate",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "meter.numberOfDigits",
+            "columnName": "numberOfDigits",
             "affinity": "INTEGER",
             "notNull": false
           }
@@ -166,7 +172,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '96cca10a1eba767e27dbfe98f63043f2')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'bdd9fb7297492a3a8924ad6f8c74ce42')"
     ]
   }
 }

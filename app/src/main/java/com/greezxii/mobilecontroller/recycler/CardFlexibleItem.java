@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.greezxii.mobilecontroller.R;
-import com.greezxii.mobilecontroller.model.Inspection;
+import com.greezxii.mobilecontroller.model.Card;
 
 import java.util.List;
 
@@ -17,19 +17,19 @@ import eu.davidea.flexibleadapter.items.IFlexible;
 import eu.davidea.flexibleadapter.utils.DrawableUtils;
 import eu.davidea.viewholders.FlexibleViewHolder;
 
-public class InspectionFlexibleItem extends AbstractFlexibleItem<InspectionFlexibleItem.InspectionViewHolder> {
+public class CardFlexibleItem extends AbstractFlexibleItem<CardFlexibleItem.CardViewHolder> {
 
-    private Inspection inspection;
+    private final Card card;
 
-    public InspectionFlexibleItem(Inspection inspection) {
-        this.inspection = inspection;
+    public CardFlexibleItem(Card card) {
+        this.card = card;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (o instanceof Inspection) {
-            Inspection outInspection = (Inspection) o;
-            return this.inspection.id == outInspection.id;
+        if (o instanceof Card) {
+            Card outCard = (Card) o;
+            return this.card.id == outCard.id;
         }
         return false;
     }
@@ -40,13 +40,14 @@ public class InspectionFlexibleItem extends AbstractFlexibleItem<InspectionFlexi
     }
 
     @Override
-    public InspectionViewHolder createViewHolder(View view, FlexibleAdapter<IFlexible> adapter) {
-        return new InspectionViewHolder(view, adapter);
+    public CardViewHolder createViewHolder(View view, FlexibleAdapter<IFlexible> adapter) {
+        return new CardViewHolder(view, adapter);
     }
 
     @Override
-    public void bindViewHolder(FlexibleAdapter<IFlexible> adapter, InspectionViewHolder holder, int position, List<Object> payloads) {
-        String title = inspection.getAddress() + ", " + inspection.getApartment();
+    public void bindViewHolder(FlexibleAdapter<IFlexible> adapter, CardViewHolder holder, int position, List<Object> payloads) {
+        String title = card.address.getBuildingAddress() + ", "
+                + card.address.getApartmentAddress();
         holder.title.setText(title);
         holder.title.setEnabled(isEnabled());
 
@@ -57,11 +58,11 @@ public class InspectionFlexibleItem extends AbstractFlexibleItem<InspectionFlexi
         DrawableUtils.setBackgroundCompat(holder.itemView, drawable);
     }
 
-    public class InspectionViewHolder extends FlexibleViewHolder {
+    public static class CardViewHolder extends FlexibleViewHolder {
 
         public TextView title;
 
-        public InspectionViewHolder(View view, FlexibleAdapter adapter) {
+        public CardViewHolder(View view, FlexibleAdapter adapter) {
             super(view, adapter);
             title = (TextView) view.findViewById(R.id.title);
         }

@@ -22,9 +22,9 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.greezxii.mobilecontroller.R;
-import com.greezxii.mobilecontroller.model.Inspection;
+import com.greezxii.mobilecontroller.model.Card;
 import com.greezxii.mobilecontroller.databinding.ActivityMainBinding;
-import com.greezxii.mobilecontroller.recycler.InspectionFlexibleItem;
+import com.greezxii.mobilecontroller.recycler.CardFlexibleItem;
 import com.greezxii.mobilecontroller.repository.DataRepository;
 import com.greezxii.mobilecontroller.viewmodel.MainViewModel;
 
@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding mBinding;
     public MainViewModel mViewModel;
-    private FlexibleAdapter<IFlexible> mAdapter;
+    private FlexibleAdapter<IFlexible> mRecyclerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,14 +61,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initRecycler() {
-        List<IFlexible> flexibleList = createFlexibleList(mViewModel.mInspections);
-        mAdapter = new FlexibleAdapter<>(flexibleList);
-        mAdapter.setMode(SelectableAdapter.Mode.SINGLE);
+        List<IFlexible> flexibleList = createFlexibleList(mViewModel.mCards);
+        mRecyclerAdapter = new FlexibleAdapter<>(flexibleList);
+        mRecyclerAdapter.setMode(SelectableAdapter.Mode.SINGLE);
         if (!flexibleList.isEmpty())
-            mAdapter.toggleSelection(0);
+            mRecyclerAdapter.toggleSelection(0);
         RecyclerView recycler = findViewById(R.id.recycler_inspections);
         recycler.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        recycler.setAdapter(mAdapter);
+        recycler.setAdapter(mRecyclerAdapter);
         // Divider
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, RecyclerView.VERTICAL);
         Drawable divider = ResourcesCompat.getDrawable(getResources(), R.drawable.divider_drawable, null);
@@ -76,12 +76,12 @@ public class MainActivity extends AppCompatActivity {
             dividerItemDecoration.setDrawable(divider);
         recycler.addItemDecoration(dividerItemDecoration);
         // Click listener
-        mAdapter.mItemClickListener = (view, position) -> {
-            mAdapter.toggleSelection(position);
+        mRecyclerAdapter.mItemClickListener = (view, position) -> {
+            mRecyclerAdapter.toggleSelection(position);
             mViewModel.onSelect(position);
             return true;
         };
-        mViewModel.setRecyclerAdapter(mAdapter);
+        mViewModel.setRecyclerAdapter(mRecyclerAdapter);
      }
 
     private void initButtons() {
@@ -103,13 +103,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selectedAddress = (String)parent.getItemAtPosition(position);
-                mViewModel.setFilter(selectedAddress);
-                mViewModel.getInspectionsFromDB();
+                mViewModel.mFilter = selectedAddress.equals("") ? null : selectedAddress;
+                mViewModel.getCardsFromDB();
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                mViewModel.setFilter("");
+                mViewModel.mFilter = null;
             }
         });
         mViewModel.setSpinnerAdapter(spinnerAdapter);
@@ -122,16 +121,16 @@ public class MainActivity extends AppCompatActivity {
         return alertDialogBuilder.create();
     }
 
-    public static List<IFlexible> createFlexibleList(List<Inspection> data) {
+    public static List<IFlexible> createFlexibleList(List<Card> data) {
         List<IFlexible> flexibleList = new ArrayList<>();
         for (int i = 0; i < data.size(); i++)
-            flexibleList.add(new InspectionFlexibleItem(data.get(i)));
+            flexibleList.add(new CardFlexibleItem(data.get(i)));
         return flexibleList;
     }
 
     @Override
     protected void onPause() {
-        mViewModel.updateSelectedInspection();
+        mViewModel.updateSelectedCard();
         super.onPause();
     }
 
@@ -152,8 +151,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void loadFromTFTP(MenuItem item) {
         mViewModel.loadFromTFTP();
-        List<IFlexible> flexibleList = createFlexibleList(mViewModel.mInspections);
-        mAdapter.updateDataSet(flexibleList);
+        List<IFlexible> flexibleList = createFlexibleList(mViewModel.mCards);
+        mRecyclerAdapter.updateDataSet(flexibleList);
     }
 
     public void showBar(CharSequence msg) {

@@ -8,8 +8,8 @@ import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
-import com.greezxii.mobilecontroller.model.Inspection;
-import com.greezxii.mobilecontroller.database.InspectionDao;
+import com.greezxii.mobilecontroller.database.CardDao;
+import com.greezxii.mobilecontroller.model.Card;
 import com.greezxii.mobilecontroller.database.MobileControllerDatabase;
 
 import org.apache.commons.io.IOUtils;
@@ -41,28 +41,28 @@ public class DataRepository {
         db = MobileControllerDatabase.getDatabase(mContext);
     }
 
-    private List<Inspection> parseInspections(String tftpFileContent) {
-        // Parse Inspections
+    private List<Card> parseCards(String tftpFileContent) {
+        // Parse cards
         String[] lines = tftpFileContent.split("\r\n");
-        ArrayList<Inspection> inspections = new ArrayList<>();
+        ArrayList<Card> cards = new ArrayList<>();
         for (String l : lines) {
             if (l.length() < 1)
                 continue;
-            Inspection inspection = new Inspection();
-            inspection.fromString(l);
-            inspections.add(inspection);
+            Card card = new Card();
+            card.fromString(l);
+            cards.add(card);
         }
-        return inspections;
+        return cards;
     }
 
-    public void saveInspectionsToTFTPAsync(List<Inspection> inspections, FutureCallback<Void> callback) {
+    public void saveCardsToTFTPAsync(List<Card> cards, FutureCallback<Void> callback) {
         ListenableFuture<Void> future = mExecutorService.submit(() -> {
             // Create string content of file
             StringBuilder builder = new StringBuilder();
-            for (int i = 0; i < inspections.size(); i++) {
-                Inspection inspection = inspections.get(i);
-                if (inspection.value != null) {
-                    builder.append(inspection);
+            for (int i = 0; i < cards.size(); i++) {
+                Card card = cards.get(i);
+                if (card.consumption != null) {
+                    builder.append(card);
                 }
             }
             // Create byte stream
@@ -82,8 +82,8 @@ public class DataRepository {
         Futures.addCallback(future, callback, ContextCompat.getMainExecutor(mContext));
     }
 
-    public void loadInspectionsFromTFTPAsync(FutureCallback<List<Inspection>> callback) {
-        ListenableFuture<List<Inspection>> future = mExecutorService.submit(() -> {
+    public void loadCardsFromTFTPAsync(FutureCallback<List<Card>> callback) {
+        ListenableFuture<List<Card>> future = mExecutorService.submit(() -> {
             // Read file content from TFTP
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             TFTPClient client = new TFTPClient();
@@ -98,25 +98,25 @@ public class DataRepository {
             }
             client.close();
 
-            List<Inspection> inspections = parseInspections(tftpFileContent);
-            InspectionDao inspectionDao = db.inspectionDao();
-            inspectionDao.deleteAll();
-            inspectionDao.insertAll(inspections.toArray(new Inspection[0]));
-            return inspections;
+            List<Card> cards = parseCards(tftpFileContent);
+            CardDao cardDao = db.cardsDao();
+            cardDao.deleteAll();
+            cardDao.insertAll(cards.toArray(new Card[0]));
+            return cards;
         });
         Futures.addCallback(future, callback, ContextCompat.getMainExecutor(mContext));
     }
 
-    public void makeInspectionsCacheFromMock(FutureCallback<Void> callback) {
+    public void populateWithTestData(FutureCallback<Void> callback) {
         ListenableFuture<Void> future = mExecutorService.submit(() -> {
-            InspectionDao inspectionDao = db.inspectionDao();
-            List<Inspection> inspections = inspectionDao.getAllInspections();
-            if (!inspections.isEmpty())
+            CardDao cardDao = db.cardsDao();
+            List<Card> cards = cardDao.getAllCards();
+            if (!cards.isEmpty())
                 return null;
             try(InputStream inputStream = mContext.getAssets().open("input.db")) {
                 String fileContent = IOUtils.toString(inputStream, Charset.defaultCharset());
-                inspections = parseInspections(fileContent);
-                inspectionDao.insertAll(inspections.toArray(new Inspection[0]));
+                cards = parseCards(fileContent);
+                cardDao.insertAll(cards.toArray(new Card[0]));
             } catch (IOException e) {
                 throw new Exception("Не удалось загрузить файл из TFTP сервера.");
             }
@@ -125,36 +125,35 @@ public class DataRepository {
         Futures.addCallback(future, callback, ContextCompat.getMainExecutor(mContext));
     }
 
-    public void getAllInspections(FutureCallback<List<Inspection>> callback) {
-        ListenableFuture<List<Inspection>> future = mExecutorService.submit(() -> {
-            InspectionDao inspectionDao = db.inspectionDao();
-            return inspectionDao.getAllInspections();
+    public void getCards(FutureCallback<List<Card>> callback) {
+        ListenableFuture<List<Card>> future = mExecutorService.submit(() -> {
+            CardDao cardDao = db.cardsDao();
+            return cardDao.getAllCards();
         });
         Futures.addCallback(future, callback, ContextCompat.getMainExecutor(mContext));
     }
 
-    public void updateInspection(Inspection inspection, FutureCallback<Void> callback) {
+    public void updateCard(Card card, FutureCallback<Void> callback) {
         ListenableFuture<Void> future = mExecutorService.submit(() -> {
-            InspectionDao inspectionDao = db.inspectionDao();
-            inspectionDao.updateInspection(inspection);
+            CardDao cardDao = db.cardsDao();
+            cardDao.updateCard(card);
             return null;
         });
         Futures.addCallback(future, callback, ContextCompat.getMainExecutor(mContext));
     }
 
-    public void deleteInspections(List<Inspection> inspections, FutureCallback<Void> callback) {
+    public void deleteCard(List<Card> cards, FutureCallback<Void> callback) {
         ListenableFuture<Void> future = mExecutorService.submit(() -> {
-            InspectionDao inspectionDao = db.inspectionDao();
-            inspectionDao.deleteAll(inspections.toArray(new Inspection[0]));
+            CardDao cardDao = db.cardsDao();
+            cardDao.deleteAll(cards.toArray(new Card[0]));
             return null;
         });
         Futures.addCallback(future, callback, ContextCompat.getMainExecutor(mContext));
     }
 
     public void getPerformedInspectionsCount(FutureCallback<Integer> callback) {
-        ListenableFuture<Integer> future = mExecutorService.submit(() -> {
-            return db.inspectionDao().getPerformedInspectionsCount();
-        });
+        ListenableFuture<Integer> future = mExecutorService.submit(() ->
+                db.cardsDao().getPerformedInspectionsCount());
         Futures.addCallback(future, callback, ContextCompat.getMainExecutor(mContext));
     }
 }

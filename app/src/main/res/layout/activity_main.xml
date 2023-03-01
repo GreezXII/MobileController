@@ -67,7 +67,7 @@
             android:textColor="#000000"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:contract="@{vm.mSelectedInspection.id}"
+            app:contract="@{vm.mSelectedCard.id}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.19"
             app:layout_constraintStart_toEndOf="@+id/textView_label_contract"
@@ -92,7 +92,7 @@
             android:textColor="#000000"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:text="@{vm.mSelectedInspection.fullName}"
+            android:text="@{vm.mSelectedCard.name}"
             app:layout_constraintStart_toStartOf="@+id/textView_contract"
             app:layout_constraintTop_toBottomOf="@+id/textView_contract" />
 
@@ -115,7 +115,7 @@
             android:textColor="#000000"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:text="@{vm.mSelectedInspection.contacts}"
+            android:text="@{vm.mSelectedCard.contacts}"
             app:layout_constraintStart_toStartOf="@+id/textView_fullName"
             app:layout_constraintTop_toBottomOf="@+id/textView_fullName" />
 
@@ -138,7 +138,7 @@
             android:textColor="#000000"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:meter="@{vm.mSelectedInspection}"
+            app:meter="@{vm.mSelectedCard}"
             app:layout_constraintStart_toStartOf="@+id/textView_phoneNumber"
             app:layout_constraintTop_toBottomOf="@+id/textView_phoneNumber" />
 
@@ -161,7 +161,7 @@
             android:textColor="#000000"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:date="@{vm.mSelectedInspection.installationDate}"
+            app:date="@{vm.mSelectedCard.meter.installationDate}"
             app:layout_constraintStart_toStartOf="@+id/textView_meter"
             app:layout_constraintTop_toBottomOf="@+id/textView_meter" />
 
@@ -184,7 +184,7 @@
             android:textColor="#000000"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:booleanValue="@{vm.mSelectedInspection.isDisabled}"
+            app:booleanValue="@{vm.mSelectedCard.meter.isDisabled}"
             app:layout_constraintStart_toStartOf="@+id/textView_installationDate"
             app:layout_constraintTop_toBottomOf="@+id/textView_installationDate" />
 
@@ -207,7 +207,7 @@
             android:textColor="#000000"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:coloredDecimalValue="@{vm.mSelectedInspection.debt}"
+            app:coloredDecimalValue="@{vm.mSelectedCard.debt}"
             app:layout_constraintStart_toStartOf="@+id/textView_isDisabled"
             app:layout_constraintTop_toBottomOf="@+id/textView_isDisabled" />
 
@@ -230,7 +230,7 @@
             android:textColor="#000000"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:date="@{vm.mSelectedInspection.lastInspectionDate}"
+            app:date="@{vm.mSelectedCard.lastInspectionDate}"
             app:layout_constraintStart_toStartOf="@+id/textView_debt"
             app:layout_constraintTop_toBottomOf="@+id/textView_debt" />
 
@@ -253,7 +253,7 @@
             android:textColor="#000000"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:coloredDecimalValue="@{vm.mSelectedInspection.debtByActs}"
+            app:coloredDecimalValue="@{vm.mSelectedCard.debtByActs}"
             app:layout_constraintStart_toStartOf="@+id/textView_inspectionDate"
             app:layout_constraintTop_toBottomOf="@+id/textView_inspectionDate" />
 
@@ -300,7 +300,7 @@
             android:textColor="#000000"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:date="@{vm.mSelectedInspection.verificationDate}"
+            app:date="@{vm.mSelectedCard.meter.verificationDate}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView_meter" />
 
@@ -312,7 +312,7 @@
             android:textColor="#000000"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:booleanValue="@{vm.mSelectedInspection.isAntimagnet}"
+            app:booleanValue="@{vm.mSelectedCard.meter.isAntimagnet}"
             app:layout_constraintStart_toStartOf="@+id/textView_verification"
             app:layout_constraintTop_toBottomOf="@+id/textView_verification" />
 
@@ -324,7 +324,7 @@
             android:textColor="#000000"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:date="@{vm.mSelectedInspection.paymentDate}"
+            app:date="@{vm.mSelectedCard.paymentDate}"
             app:layout_constraintStart_toStartOf="@+id/textView_isAntimagnet"
             app:layout_constraintTop_toBottomOf="@+id/textView_isAntimagnet" />
 
@@ -334,7 +334,7 @@
             android:layout_height="0dp"
             android:layout_marginEnd="16dp"
             android:text="@string/openInfo"
-            android:enabled="@{vm.mSelectedInspection != null}"
+            android:enabled="@{vm.mSelectedCard != null}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -392,9 +392,9 @@
             android:ems="10"
             android:hint="@string/note"
             android:inputType="text"
-            android:text="@={vm.mSelectedInspection.note}"
+            android:text="@={vm.mSelectedCard.note}"
             android:importantForAutofill="no"
-            android:enabled="@{vm.mSelectedInspection != null}"
+            android:enabled="@{vm.mSelectedCard != null}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/editText_value"
             app:layout_constraintTop_toBottomOf="@+id/editText_value" />
@@ -408,8 +408,8 @@
             android:hint="@string/Value"
             android:autofillHints="@string/Value"
             android:inputType="numberDecimal"
-            android:text="@={BindingAdapters.nullableIntegerToString(vm.mSelectedInspection.value)}"
-            android:enabled="@{vm.mSelectedInspection != null}"
+            android:text="@={BindingAdapters.nullableIntegerToString(vm.mSelectedCard.consumption)}"
+            android:enabled="@{vm.mSelectedCard != null}"
             app:layout_constraintStart_toEndOf="@+id/recycler_inspections"
             app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 

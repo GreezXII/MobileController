@@ -9,12 +9,10 @@ import androidx.lifecycle.ViewModel;
 
 import com.google.common.util.concurrent.FutureCallback;
 import com.greezxii.mobilecontroller.activities.MainActivity;
+import com.greezxii.mobilecontroller.model.Card;
 import com.greezxii.mobilecontroller.repository.DataRepository;
-import com.greezxii.mobilecontroller.model.Inspection;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -26,28 +24,28 @@ public class MainViewModel extends ViewModel {
 
     private final AlertDialog mAlertDialog;
     private final DataRepository mRepository;
-    public MutableLiveData<List<Inspection>> mLiveInspections;
-    public List<Inspection> mInspections;
-    public MutableLiveData<Inspection> mSelectedInspection;
+    public MutableLiveData<List<Card>> mLiveCards;
+    public List<Card> mCards;
+    public MutableLiveData<Card> mSelectedCard;
     public MutableLiveData<Integer> mInspectionsCount;
     public MutableLiveData<Integer> mPerformedInspectionsCount;
     public List<String> mDistinctAddresses;
+    public String mFilter;
     private FlexibleAdapter<IFlexible> mRecyclerAdapter;
     private ArrayAdapter<String> mSpinnerAdapter;
-    private String mFilter;
 
     public MainViewModel(DataRepository repository, AlertDialog alertDialog) {
-        this.mInspections = new ArrayList<>();
-        this.mLiveInspections = new MutableLiveData<>();
-        this.mSelectedInspection = new MutableLiveData<>();
+        this.mCards = new ArrayList<>();
+        this.mLiveCards = new MutableLiveData<>();
+        this.mSelectedCard = new MutableLiveData<>();
         this.mDistinctAddresses = new ArrayList<>();
         this.mRepository = repository;
         this.mAlertDialog = alertDialog;
-        getInspectionsFromDB();
+        getCardsFromDB();
         this.mInspectionsCount = new MutableLiveData<>();
         this.mPerformedInspectionsCount = new MutableLiveData<>();
         updatePerformedInspectionsCount();
-        mFilter = "";
+        mFilter = null;
     }
 
     private void showMessageBox(String title, String message) {
@@ -65,7 +63,7 @@ public class MainViewModel extends ViewModel {
 
             @Override
             public void onFailure(Throwable t) {
-                String message = "Не удалось получить количество выполненных обходов. "
+                String message = "Не удалось получить количество выполненных обходов:\n"
                         + t.getMessage();
                 showMessageBox("Ошибка", message);
             }
@@ -75,11 +73,7 @@ public class MainViewModel extends ViewModel {
 
     public void updateRecyclerView() {
         if (mRecyclerAdapter != null)
-            mRecyclerAdapter.updateDataSet(MainActivity.createFlexibleList(mInspections));
-    }
-
-    public void setFilter(String filter) {
-        mFilter = filter;
+            mRecyclerAdapter.updateDataSet(MainActivity.createFlexibleList(mCards));
     }
 
     public void setRecyclerAdapter(FlexibleAdapter<IFlexible> adapter) {
@@ -91,26 +85,26 @@ public class MainViewModel extends ViewModel {
     }
 
     public void onSelect(int position) {
-        updateSelectedInspection();
+        updateSelectedCard();
         updatePerformedInspectionsCount();
-        Inspection selected = mInspections.get(position);
-        mSelectedInspection.setValue(selected);
+        Card selected = mCards.get(position);
+        mSelectedCard.setValue(selected);
     }
 
-    public void getInspectionsFromDB() {
-        //repository.makeInspectionsCacheFromMock();
-        FutureCallback<List<Inspection>> callback = new FutureCallback<List<Inspection>>() {
+    public void getCardsFromDB() {
+        //mRepository.populateWithTestData();
+        FutureCallback<List<Card>> callback = new FutureCallback<List<Card>>() {
             @Override
-            public void onSuccess(List<Inspection> result) {
+            public void onSuccess(List<Card> result) {
                 // Load from DB
-                mInspections = result;
+                mCards = result;
 
                 // Populate spinner
-                if (mFilter.equals("")) {
+                if (mFilter == null) {
                     SortedSet<String> distinctAddresses = new TreeSet<>();
                     distinctAddresses.add("");
-                    for (Inspection i: mInspections) {
-                        distinctAddresses.add(i.getAddress());
+                    for (Card c: mCards) {
+                        distinctAddresses.add(c.address.getBuildingAddress());
                     }
                     mSpinnerAdapter.clear();
                     for (String address : distinctAddresses) {
@@ -118,28 +112,28 @@ public class MainViewModel extends ViewModel {
                     }
                 } else
                     // Apply filter
-                    mInspections.removeIf(insp -> !mFilter.equals(insp.getAddress()));
+                    mCards.removeIf(insp -> !mFilter.equals(insp.address.getBuildingAddress()));
 
                 // Update recycler view
-                if (!mInspections.isEmpty()) {
-                    mLiveInspections.setValue(mInspections);
-                    mSelectedInspection.setValue(mInspections.get(0));
+                if (!mCards.isEmpty()) {
+                    mLiveCards.setValue(mCards);
+                    mSelectedCard.setValue(mCards.get(0));
                     mRecyclerAdapter.toggleSelection(0);
                 }
                 updateRecyclerView();
-                mInspectionsCount.setValue(mInspections.size());
+                mInspectionsCount.setValue(mCards.size());
             }
 
             @Override
             public void onFailure(Throwable t) {
-                String message = "Не удалось выполнить загрузку из базы данных. " + t.getMessage();
+                String message = "Не удалось выполнить загрузку из базы данных:\n" + t.getMessage();
                 showMessageBox("Ошибка", message);
             }
         };
-        mRepository.getAllInspections(callback);
+        mRepository.getCards(callback);
     }
 
-    public void updateSelectedInspection() {
+    public void updateSelectedCard() {
         FutureCallback<Void> callback = new FutureCallback<Void>() {
             @Override
             public void onSuccess(Void result) {
@@ -148,14 +142,14 @@ public class MainViewModel extends ViewModel {
 
             @Override
             public void onFailure(Throwable t) {
-                String message = "Не удалось обновить запись в базе данных. " + t.getMessage();
+                String message = "Не удалось обновить запись в базе данных:\n" + t.getMessage();
                 showMessageBox("Ошибка", message);
             }
         };
-        mRepository.updateInspection(mSelectedInspection.getValue(), callback);
+        mRepository.updateCard(mSelectedCard.getValue(), callback);
     }
 
-    public void deleteInspections() {
+    public void deleteCard() {
         FutureCallback<Void> callback = new FutureCallback<Void>() {
             @Override
             public void onSuccess(Void result) {
@@ -164,11 +158,11 @@ public class MainViewModel extends ViewModel {
 
             @Override
             public void onFailure(Throwable t) {
-                String message = "Не удалось удалить запись в базе данных. " + t.getMessage();
+                String message = "Не удалось удалить запись в базе данных:\n" + t.getMessage();
                 showMessageBox("Ошибка", message);
             }
         };
-        mRepository.deleteInspections(mInspections, callback);
+        mRepository.deleteCard(mCards, callback);
     }
 
     public void saveToTFTP() {
@@ -180,29 +174,29 @@ public class MainViewModel extends ViewModel {
 
             @Override
             public void onFailure(@NonNull Throwable t) {
-                String message = "Не удалось сохранить данные на TFTP сервер. " + t.getMessage();
+                String message = "Не удалось сохранить данные на TFTP сервер:\n" + t.getMessage();
                 showMessageBox("Ошибка", message);
             }
         };
-        getInspectionsFromDB();
-        mRepository.saveInspectionsToTFTPAsync(mInspections, callback);
+        getCardsFromDB();
+        mRepository.saveCardsToTFTPAsync(mCards, callback);
     }
 
     public void loadFromTFTP() {
-        FutureCallback<List<Inspection>> callback = new FutureCallback<List<Inspection>>() {
+        FutureCallback<List<Card>> callback = new FutureCallback<List<Card>>() {
             @Override
-            public void onSuccess(List<Inspection> result) {
+            public void onSuccess(List<Card> result) {
                 showMessageBox("Уведомление", "Загрузка данных из TFTP выполнена успешно.");
-                getInspectionsFromDB();
+                getCardsFromDB();
                 updateRecyclerView();
             }
 
             @Override
             public void onFailure(Throwable t) {
-                String message = "Не удалось загрузить данные из TFTP сервера. " + t.getMessage();
+                String message = "Не удалось загрузить данные из TFTP сервера:\n" + t.getMessage();
                 showMessageBox("Ошибка", message);
             }
         };
-        mRepository.loadInspectionsFromTFTPAsync(callback);
+        mRepository.loadCardsFromTFTPAsync(callback);
     }
 }
