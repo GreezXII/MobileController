@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.google.common.util.concurrent.FutureCallback;
 import com.greezxii.mobilecontroller.activities.MainActivity;
+import com.greezxii.mobilecontroller.model.Address;
 import com.greezxii.mobilecontroller.model.Card;
 import com.greezxii.mobilecontroller.repository.DataRepository;
 
@@ -42,6 +43,7 @@ public class MainViewModel extends ViewModel {
         this.mRepository = repository;
         this.mAlertDialog = alertDialog;
         getCardsFromDB();
+        getDistinctAddresses();
         this.mInspectionsCount = new MutableLiveData<>();
         this.mPerformedInspectionsCount = new MutableLiveData<>();
         updatePerformedInspectionsCount();
@@ -98,22 +100,6 @@ public class MainViewModel extends ViewModel {
             public void onSuccess(List<Card> result) {
                 // Load from DB
                 mCards = result;
-
-                // Populate spinner
-                if (mFilter == null) {
-                    SortedSet<String> distinctAddresses = new TreeSet<>();
-                    distinctAddresses.add("");
-                    for (Card c: mCards) {
-                        distinctAddresses.add(c.address.getBuildingAddress());
-                    }
-                    mSpinnerAdapter.clear();
-                    for (String address : distinctAddresses) {
-                        mSpinnerAdapter.add(address);
-                    }
-                } else
-                    // Apply filter
-                    mCards.removeIf(insp -> !mFilter.equals(insp.address.getBuildingAddress()));
-
                 // Update recycler view
                 if (!mCards.isEmpty()) {
                     mLiveCards.setValue(mCards);
@@ -131,6 +117,28 @@ public class MainViewModel extends ViewModel {
             }
         };
         mRepository.getCards(callback);
+    }
+
+    public void getDistinctAddresses() {
+        FutureCallback<List<Address>> callback = new FutureCallback<List<Address>>() {
+            @Override
+            public void onSuccess(List<Address> addresses) {
+                // Populate spinner
+                mSpinnerAdapter.clear();
+                mSpinnerAdapter.add("");
+                for (Address address : addresses) {
+                    mSpinnerAdapter.add(address.toString());
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                String message = "Не удалось выполнить загрузку уникальных адресов " +
+                        "из базы данных:\n" + t.getMessage();
+                showMessageBox("Ошибка", message);
+            }
+        };
+        mRepository.getDistinctAddresses(callback);
     }
 
     public void updateSelectedCard() {

@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selectedAddress = (String)parent.getItemAtPosition(position);
                 mViewModel.mFilter = selectedAddress.equals("") ? null : selectedAddress;
-                mViewModel.getCardsFromDB();
+                //mViewModel.getCardsFromDB();
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {

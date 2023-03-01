@@ -1,5 +1,7 @@
 package com.greezxii.mobilecontroller.model;
 
+import androidx.annotation.NonNull;
+
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -12,6 +14,12 @@ public class Address {
     public String blockLetter;
     public Integer apartmentNumber;
     public String apartmentLetter;
+
+    @NonNull
+    @Override
+    public String toString() {
+        return getBuildingAddress();
+    }
 
     public String getBuildingAddress() {
         StringBuilder result = new StringBuilder();

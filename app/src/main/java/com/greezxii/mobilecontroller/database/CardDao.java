@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
+import com.greezxii.mobilecontroller.model.Address;
 import com.greezxii.mobilecontroller.model.Card;
 
 import java.util.List;
@@ -27,6 +28,10 @@ public interface CardDao {
             "blockNumber, blockLetter, " +
             "apartmentNumber, apartmentLetter")
     List<Card> getAllCards();
+
+    @Query("SELECT DISTINCT street, buildingNumber, buildingLetter, blockNumber, blockLetter " +
+            "FROM Card")
+    List<Address> getDistinctBuildingAddresses();
 
     @Query("SELECT Count(*) FROM Card WHERE consumption >= 0")
     Integer getPerformedInspectionsCount();

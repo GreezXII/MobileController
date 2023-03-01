@@ -9,6 +9,7 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.greezxii.mobilecontroller.database.CardDao;
+import com.greezxii.mobilecontroller.model.Address;
 import com.greezxii.mobilecontroller.model.Card;
 import com.greezxii.mobilecontroller.database.MobileControllerDatabase;
 
@@ -129,6 +130,14 @@ public class DataRepository {
         ListenableFuture<List<Card>> future = mExecutorService.submit(() -> {
             CardDao cardDao = db.cardsDao();
             return cardDao.getAllCards();
+        });
+        Futures.addCallback(future, callback, ContextCompat.getMainExecutor(mContext));
+    }
+
+    public void getDistinctAddresses(FutureCallback<List<Address>> callback) {
+        ListenableFuture<List<Address>> future = mExecutorService.submit(() -> {
+            CardDao cardDao = db.cardsDao();
+            return cardDao.getDistinctBuildingAddresses();
         });
         Futures.addCallback(future, callback, ContextCompat.getMainExecutor(mContext));
     }
