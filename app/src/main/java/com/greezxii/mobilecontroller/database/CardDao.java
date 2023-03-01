@@ -30,7 +30,7 @@ public interface CardDao {
     List<Card> getAllCards();
 
     @Query("SELECT DISTINCT street, buildingNumber, buildingLetter, blockNumber, blockLetter " +
-            "FROM Card")
+            "FROM Card ORDER BY street, buildingNumber, buildingLetter, blockNumber, blockLetter")
     List<Address> getDistinctBuildingAddresses();
 
     @Query("SELECT Count(*) FROM Card WHERE consumption >= 0")
