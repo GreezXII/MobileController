@@ -6,6 +6,8 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import kotlinx.coroutines.channels.ActorKt;
+
 public class Address {
     public String street;
     public int buildingNumber;
@@ -24,7 +26,10 @@ public class Address {
     public String getBuildingAddress() {
         StringBuilder result = new StringBuilder();
         Locale locale = new Locale("ru", "RU");
-        result.append(String.format(locale, "%s, дом.%d", street, buildingNumber));
+        if(street != null)
+            result.append(String.format(locale, "%s, ", street));
+        if(buildingNumber != 0)
+            result.append(String.format(locale, "дом.%d", buildingNumber));
         if(buildingLetter != null)
             result.append(String.format(locale, "-%s", buildingLetter));
         if(blockNumber != null)

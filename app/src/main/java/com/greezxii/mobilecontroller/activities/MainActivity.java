@@ -22,10 +22,12 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.greezxii.mobilecontroller.R;
+import com.greezxii.mobilecontroller.model.Address;
 import com.greezxii.mobilecontroller.model.Card;
 import com.greezxii.mobilecontroller.databinding.ActivityMainBinding;
 import com.greezxii.mobilecontroller.recycler.CardFlexibleItem;
 import com.greezxii.mobilecontroller.repository.DataRepository;
+import com.greezxii.mobilecontroller.spinner.AddressArrayAdapter;
 import com.greezxii.mobilecontroller.viewmodel.MainViewModel;
 
 import java.util.ArrayList;
@@ -95,20 +97,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initSpinner() {
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this,
-                androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, mViewModel.mDistinctAddresses);
-        spinnerAdapter.setDropDownViewResource(androidx.appcompat.R.layout.support_simple_spinner_dropdown_item);
+        AddressArrayAdapter spinnerAdapter = new AddressArrayAdapter(this,
+                androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,
+                mViewModel.mDistinctAddresses);
+        spinnerAdapter.setDropDownViewResource(
+                androidx.appcompat.R.layout.support_simple_spinner_dropdown_item);
         mBinding.spinnerAddresses.setAdapter(spinnerAdapter);
         mBinding.spinnerAddresses.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selectedAddress = (String)parent.getItemAtPosition(position);
-                mViewModel.mFilter = selectedAddress.equals("") ? null : selectedAddress;
-                //mViewModel.getCardsFromDB();
+                Address selectedAddress = (Address)parent.getItemAtPosition(position);
+                if (selectedAddress.street != null)
+                    mViewModel.setFilter(selectedAddress);
+                else
+                    mViewModel.setFilter(null);
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                mViewModel.mFilter = null;
+                mViewModel.setFilter(null);
             }
         });
         mViewModel.setSpinnerAdapter(spinnerAdapter);

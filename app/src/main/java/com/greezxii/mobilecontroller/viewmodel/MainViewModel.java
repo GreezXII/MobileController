@@ -12,11 +12,12 @@ import com.greezxii.mobilecontroller.activities.MainActivity;
 import com.greezxii.mobilecontroller.model.Address;
 import com.greezxii.mobilecontroller.model.Card;
 import com.greezxii.mobilecontroller.repository.DataRepository;
+import com.greezxii.mobilecontroller.spinner.AddressArrayAdapter;
+
+import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 import eu.davidea.flexibleadapter.FlexibleAdapter;
 import eu.davidea.flexibleadapter.items.IFlexible;
@@ -30,10 +31,10 @@ public class MainViewModel extends ViewModel {
     public MutableLiveData<Card> mSelectedCard;
     public MutableLiveData<Integer> mInspectionsCount;
     public MutableLiveData<Integer> mPerformedInspectionsCount;
-    public List<String> mDistinctAddresses;
-    public String mFilter;
+    public List<Address> mDistinctAddresses;
     private FlexibleAdapter<IFlexible> mRecyclerAdapter;
-    private ArrayAdapter<String> mSpinnerAdapter;
+    private AddressArrayAdapter mSpinnerAdapter;
+    private Address mAddressFilter;
 
     public MainViewModel(DataRepository repository, AlertDialog alertDialog) {
         this.mCards = new ArrayList<>();
@@ -42,12 +43,12 @@ public class MainViewModel extends ViewModel {
         this.mDistinctAddresses = new ArrayList<>();
         this.mRepository = repository;
         this.mAlertDialog = alertDialog;
+        this.mAddressFilter = null;
         getCardsFromDB();
         getDistinctAddresses();
         this.mInspectionsCount = new MutableLiveData<>();
         this.mPerformedInspectionsCount = new MutableLiveData<>();
         updatePerformedInspectionsCount();
-        mFilter = null;
     }
 
     private void showMessageBox(String title, String message) {
@@ -73,6 +74,13 @@ public class MainViewModel extends ViewModel {
         mRepository.getPerformedInspectionsCount(callback);
     }
 
+    public void setFilter(Address filter) {
+        if (filter != mAddressFilter) {
+            mAddressFilter = filter;
+            getCardsFromDB();
+        }
+    }
+
     public void updateRecyclerView() {
         if (mRecyclerAdapter != null)
             mRecyclerAdapter.updateDataSet(MainActivity.createFlexibleList(mCards));
@@ -82,7 +90,7 @@ public class MainViewModel extends ViewModel {
         mRecyclerAdapter = adapter;
     }
 
-    public void setSpinnerAdapter(ArrayAdapter<String> adapter) {
+    public void setSpinnerAdapter(AddressArrayAdapter adapter) {
         mSpinnerAdapter = adapter;
     }
 
@@ -94,7 +102,7 @@ public class MainViewModel extends ViewModel {
     }
 
     public void getCardsFromDB() {
-        //mRepository.populateWithTestData();
+        //mRepository.populateWithTestData(callback_mock);
         FutureCallback<List<Card>> callback = new FutureCallback<List<Card>>() {
             @Override
             public void onSuccess(List<Card> result) {
@@ -116,7 +124,10 @@ public class MainViewModel extends ViewModel {
                 showMessageBox("Ошибка", message);
             }
         };
-        mRepository.getCards(callback);
+        if (mAddressFilter == null)
+            mRepository.getCards(callback);
+        else
+            mRepository.getCardsByBuildingAddress(mAddressFilter, callback);
     }
 
     public void getDistinctAddresses() {
@@ -125,10 +136,8 @@ public class MainViewModel extends ViewModel {
             public void onSuccess(List<Address> addresses) {
                 // Populate spinner
                 mSpinnerAdapter.clear();
-                mSpinnerAdapter.add("");
-                for (Address address : addresses) {
-                    mSpinnerAdapter.add(address.toString());
-                }
+                addresses.add(0, new Address());
+                mSpinnerAdapter.addAll(addresses);
             }
 
             @Override

@@ -10,6 +10,8 @@ import androidx.room.Update;
 import com.greezxii.mobilecontroller.model.Address;
 import com.greezxii.mobilecontroller.model.Card;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.util.List;
 
 @Dao
@@ -28,6 +30,22 @@ public interface CardDao {
             "blockNumber, blockLetter, " +
             "apartmentNumber, apartmentLetter")
     List<Card> getAllCards();
+
+    @Query("SELECT * FROM Card " +
+            "WHERE street is :street AND " +
+            "buildingNumber is :buildingNumber AND " +
+            "buildingLetter is :buildingLetter AND " +
+            "blockNumber is :blockNumber AND " +
+            "blockLetter is :blockLetter " +
+            "ORDER BY " +
+            "street, buildingNumber, buildingLetter, " +
+            "blockNumber, blockLetter, " +
+            "apartmentNumber, apartmentLetter")
+    List<Card> getCardsByBuildingAddress(String street,
+                                         int buildingNumber,
+                                         String buildingLetter,
+                                         Integer blockNumber,
+                                         String blockLetter);
 
     @Query("SELECT DISTINCT street, buildingNumber, buildingLetter, blockNumber, blockLetter " +
             "FROM Card ORDER BY street, buildingNumber, buildingLetter, blockNumber, blockLetter")

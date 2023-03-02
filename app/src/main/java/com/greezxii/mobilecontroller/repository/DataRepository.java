@@ -134,6 +134,15 @@ public class DataRepository {
         Futures.addCallback(future, callback, ContextCompat.getMainExecutor(mContext));
     }
 
+    public void getCardsByBuildingAddress(Address address, FutureCallback<List<Card>> callback) {
+        ListenableFuture<List<Card>> future = mExecutorService.submit(() -> {
+            CardDao cardDao = db.cardsDao();
+            return cardDao.getCardsByBuildingAddress(address.street, address.buildingNumber,
+                        address.buildingLetter, address.blockNumber, address.blockLetter);
+        });
+        Futures.addCallback(future, callback, ContextCompat.getMainExecutor(mContext));
+    }
+
     public void getDistinctAddresses(FutureCallback<List<Address>> callback) {
         ListenableFuture<List<Address>> future = mExecutorService.submit(() -> {
             CardDao cardDao = db.cardsDao();
