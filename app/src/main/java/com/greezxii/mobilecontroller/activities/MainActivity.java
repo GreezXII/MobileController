@@ -90,10 +90,7 @@ public class MainActivity extends AppCompatActivity {
         Button button;
         // Open info button
         button = findViewById(R.id.button_openInfo);
-        button.setOnClickListener(view -> {
-            Intent intent = new Intent(MainActivity.this, InfoActivity.class);
-            startActivity(intent);
-        });
+        button.setOnClickListener(view -> openCardInfo());
     }
 
     private void initSpinner() {
@@ -148,6 +145,18 @@ public class MainActivity extends AppCompatActivity {
 
     public void openSettings(MenuItem Item) {
         Intent intent = new Intent(this, SettingsActivity.class);
+        this.startActivity(intent);
+    }
+
+    public void openCardInfo() {
+        Intent intent = new Intent(this, InfoActivity.class);
+        Card selectedCard = mViewModel.mSelectedCard.getValue();
+        String info;
+        if (selectedCard != null && selectedCard.info != null)
+            info = selectedCard.info;
+        else
+            info = "Данные не найдены.";
+        intent.putExtra("info", info);
         this.startActivity(intent);
     }
 

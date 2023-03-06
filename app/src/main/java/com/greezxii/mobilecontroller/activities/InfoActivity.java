@@ -15,7 +15,9 @@ public class InfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info);
 
+        String infoContent = getIntent().getStringExtra("info");
         TextView info = findViewById(R.id.textView_info);
         info.setMovementMethod(new ScrollingMovementMethod());
+        info.setText(infoContent);
     }
 }

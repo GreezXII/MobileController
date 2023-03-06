@@ -34,6 +34,7 @@ public class DataRepository {
     Context mContext;
     public String TFTP_SERVER_IP = "192.168.1.158";
     public String INPUT_FILE_NAME = "input.db";
+    public String NOTE_FILE_NAME = "obxod.txt";
     public MobileControllerDatabase db;
 
     public DataRepository(Context context, ListeningExecutorService executorService) {
@@ -42,15 +43,15 @@ public class DataRepository {
         db = MobileControllerDatabase.getDatabase(mContext);
     }
 
-    private List<Card> parseCards(String tftpFileContent) {
+    private List<Card> parseCards(String inputFileContent, String noteFileContexnt) {
         // Parse cards
-        String[] lines = tftpFileContent.split("\r\n");
+        String[] lines = inputFileContent.split("\r\n");
         ArrayList<Card> cards = new ArrayList<>();
         for (String l : lines) {
             if (l.length() < 1)
                 continue;
             Card card = new Card();
-            card.fromString(l);
+            card.fromString(l, noteFileContexnt);
             cards.add(card);
         }
         return cards;
@@ -89,39 +90,33 @@ public class DataRepository {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             TFTPClient client = new TFTPClient();
             client.open();
+            //input.db
             int bytesRead = client.receiveFile(INPUT_FILE_NAME, TFTP.BINARY_MODE, outputStream, TFTP_SERVER_IP);
-            String tftpFileContent;
+            String inputFileContent;
             if (bytesRead > 0) {
-                tftpFileContent = outputStream.toString("Cp1251");
+                inputFileContent = outputStream.toString("Cp1251");
+                outputStream.reset();
             }
             else {
-                throw new Exception("Не удалось загрузить файл из TFTP сервера.");
+                throw new Exception("Не удалось загрузить файл " + INPUT_FILE_NAME + " из TFTP сервера.");
+            }
+            //obxod.txt
+            bytesRead = client.receiveFile(NOTE_FILE_NAME, TFTP.BINARY_MODE, outputStream, TFTP_SERVER_IP);
+            String noteFileContent;
+            if (bytesRead > 0) {
+                noteFileContent = outputStream.toString("Cp1251");
+                outputStream.reset();
+            }
+            else {
+                throw new Exception("Не удалось загрузить файл" + NOTE_FILE_NAME + " из TFTP сервера.");
             }
             client.close();
 
-            List<Card> cards = parseCards(tftpFileContent);
+            List<Card> cards = parseCards(inputFileContent, noteFileContent);
             CardDao cardDao = db.cardsDao();
             cardDao.deleteAll();
             cardDao.insertAll(cards.toArray(new Card[0]));
             return cards;
-        });
-        Futures.addCallback(future, callback, ContextCompat.getMainExecutor(mContext));
-    }
-
-    public void populateWithTestData(FutureCallback<Void> callback) {
-        ListenableFuture<Void> future = mExecutorService.submit(() -> {
-            CardDao cardDao = db.cardsDao();
-            List<Card> cards = cardDao.getAllCards();
-            if (!cards.isEmpty())
-                return null;
-            try(InputStream inputStream = mContext.getAssets().open("input.db")) {
-                String fileContent = IOUtils.toString(inputStream, Charset.defaultCharset());
-                cards = parseCards(fileContent);
-                cardDao.insertAll(cards.toArray(new Card[0]));
-            } catch (IOException e) {
-                throw new Exception("Не удалось загрузить файл из TFTP сервера.");
-            }
-            return null;
         });
         Futures.addCallback(future, callback, ContextCompat.getMainExecutor(mContext));
     }

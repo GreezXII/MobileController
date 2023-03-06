@@ -8,6 +8,7 @@ import androidx.room.TypeConverters;
 
 import com.greezxii.mobilecontroller.database.dbconverters.BigDecimalConverter;
 import com.greezxii.mobilecontroller.database.dbconverters.LocalDateConverter;
+import com.greezxii.mobilecontroller.utils.CardDataParser;
 
 import org.checkerframework.checker.units.qual.A;
 
@@ -36,8 +37,8 @@ public class Card {
     @Embedded
     public ElectricityMeter meter;
 
-    public void fromString(@NonNull String s) {
-        String[] row = s.split("[|]");
+    public void fromString(@NonNull String inputFileContent, @NonNull String noteFileContent) {
+        String[] row = inputFileContent.split("[|]");
 
         id = Integer.parseInt(row[0].trim());
         name = row[5];
@@ -46,13 +47,15 @@ public class Card {
         lastInspectionDate = stringToLocalDate(row[10]);
         debtByActs = new BigDecimal(row[14]);
         contacts = row[15].trim();
+        isTroublesome = CardDataParser.findTroublesome(id, noteFileContent);
+        info = CardDataParser.findNote(id, noteFileContent);
 
         address = new Address();
         address.street = row[1].split(",")[0];
         address.buildingNumber = Integer.parseInt(row[2].trim());
-        address.buildingLetter = address.findBuildingLetter(row[1]);
-        address.blockNumber = address.findBlockNumber(row[1]);
-        address.blockLetter = address.findBlockLetter(row[1]);
+        address.buildingLetter = CardDataParser.findBuildingLetter(row[1]);
+        address.blockNumber = CardDataParser.findBlockNumber(row[1]);
+        address.blockLetter = CardDataParser.findBlockLetter(row[1]);
         address.apartmentNumber = Integer.parseInt(row[3].trim());
         address.apartmentLetter = row[4];
 

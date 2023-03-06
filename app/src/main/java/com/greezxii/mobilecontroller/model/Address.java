@@ -45,37 +45,4 @@ public class Address {
             result += apartmentLetter;
         return result;
     }
-
-    public String findBuildingLetter(String s) {
-        // Соответствует букве дома. Поиск по префиксу "дом.N-" где N - это номер дома из 1-3 цифр
-        String regex = "((?<=дом\\.[0-9][0-9][0-9]-)|(?<=дом\\.[0-9][0-9]-)|(?<=дом\\.[0-9]-))[а-яА-Я]";
-        return findMatch(s, regex);
-    }
-
-    public String findBlockLetter(String s) {
-        // Соответствует букве корпуса. Поиск по префиксу "кор.N-" где N - это номер корпуса из 1-2 цифр
-        String regex = "((?<=кор\\.[0-9][0-9]-)|(?<=кор\\.[0-9]-))[а-яА-Я]";
-        return findMatch(s, regex);
-    }
-
-    public Integer findBlockNumber(String s) {
-        // Соответствует номеру корпуса. "кор."
-        String regex = "(?<=кор\\.)\\d*";
-        String match = findMatch(s, regex);
-        if (match != null)
-            return Integer.parseInt(match);
-        else
-            return null;
-    }
-
-    public String findMatch(String s, String regex) {
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(s);
-        if(matcher.find()) {
-            return matcher.group();
-        }
-        else {
-            return null;
-        }
-    }
 }
