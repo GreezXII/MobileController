@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MobileController</string>
+    <string name="app_name">Мобильный контроллер</string>
     <string name="spinner_addresses">spinner_addresses</string>
     <string name="settings">Настройки</string>
     <string name="Value">Показания</string>
