@@ -1,7 +1,5 @@
 package com.greezxii.mobilecontroller.viewmodel;
 
-import android.widget.ArrayAdapter;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.MutableLiveData;
@@ -13,8 +11,6 @@ import com.greezxii.mobilecontroller.model.Address;
 import com.greezxii.mobilecontroller.model.Card;
 import com.greezxii.mobilecontroller.repository.DataRepository;
 import com.greezxii.mobilecontroller.spinner.AddressArrayAdapter;
-
-import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,8 +78,11 @@ public class MainViewModel extends ViewModel {
     }
 
     public void updateRecyclerView() {
-        if (mRecyclerAdapter != null)
+        if (mRecyclerAdapter != null) {
             mRecyclerAdapter.updateDataSet(MainActivity.createFlexibleList(mCards));
+            mRecyclerAdapter.toggleSelection(0);
+            onSelect(0);
+        }
     }
 
     public void setRecyclerAdapter(FlexibleAdapter<IFlexible> adapter) {

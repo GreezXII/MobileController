@@ -11,9 +11,10 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/co"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#FFFFFF"
+        android:background="@{@color/white}"
         tools:context=".activities.MainActivity">
 
         <androidx.appcompat.widget.Toolbar
@@ -89,10 +90,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
+            android:text="@{vm.mSelectedCard.name}"
             android:textColor="#000000"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:text="@{vm.mSelectedCard.name}"
             app:layout_constraintStart_toStartOf="@+id/textView_contract"
             app:layout_constraintTop_toBottomOf="@+id/textView_contract" />
 
@@ -112,10 +113,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
+            android:text="@{vm.mSelectedCard.contacts}"
             android:textColor="#000000"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:text="@{vm.mSelectedCard.contacts}"
             app:layout_constraintStart_toStartOf="@+id/textView_fullName"
             app:layout_constraintTop_toBottomOf="@+id/textView_fullName" />
 
@@ -138,9 +139,9 @@
             android:textColor="#000000"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:meter="@{vm.mSelectedCard}"
             app:layout_constraintStart_toStartOf="@+id/textView_phoneNumber"
-            app:layout_constraintTop_toBottomOf="@+id/textView_phoneNumber" />
+            app:layout_constraintTop_toBottomOf="@+id/textView_phoneNumber"
+            app:meter="@{vm.mSelectedCard}" />
 
         <TextView
             android:id="@+id/textView_label_installationDate"
@@ -333,8 +334,8 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginEnd="16dp"
-            android:text="@string/openInfo"
             android:enabled="@{vm.mSelectedCard != null}"
+            android:text="@string/openInfo"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -390,11 +391,11 @@
             android:layout_marginEnd="16dp"
             android:autofillHints=""
             android:ems="10"
+            android:enabled="@{vm.mSelectedCard != null}"
             android:hint="@string/note"
+            android:importantForAutofill="no"
             android:inputType="text"
             android:text="@={vm.mSelectedCard.note}"
-            android:importantForAutofill="no"
-            android:enabled="@{vm.mSelectedCard != null}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/editText_value"
             app:layout_constraintTop_toBottomOf="@+id/editText_value" />
@@ -404,14 +405,25 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:ems="10"
-            android:hint="@string/Value"
             android:autofillHints="@string/Value"
+            android:ems="10"
+            android:enabled="@{vm.mSelectedCard != null}"
+            android:hint="@string/Value"
             android:inputType="numberDecimal"
             android:text="@={BindingAdapters.nullableIntegerToString(vm.mSelectedCard.consumption)}"
-            android:enabled="@{vm.mSelectedCard != null}"
             app:layout_constraintStart_toEndOf="@+id/recycler_inspections"
             app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="61dp"
+            android:layout_height="56dp"
+            android:layout_marginEnd="16dp"
+            android:contentDescription="@string/istroublesomecard"
+            android:visibility="@{BindingAdapters.booleanToVisibility(vm.mSelectedCard.isTroublesome)}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editText_note"
+            app:srcCompat="@drawable/alert" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

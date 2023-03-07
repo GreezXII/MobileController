@@ -1,8 +1,10 @@
 package com.greezxii.mobilecontroller.bindingadapters;
 
 import android.graphics.Color;
+import android.view.View;
 import android.widget.TextView;
 import androidx.databinding.BindingAdapter;
+import androidx.databinding.BindingConversion;
 import androidx.databinding.InverseMethod;
 
 import com.greezxii.mobilecontroller.model.Card;
@@ -80,5 +82,9 @@ public class BindingAdapters {
 
     public static Integer stringToNullableInteger(String value) {
         return value.equals("") ? null : Integer.parseInt(value);
+    }
+
+    public static int booleanToVisibility(Boolean value) {
+        return value != null && value ? View.VISIBLE : View.INVISIBLE;
     }
 }
